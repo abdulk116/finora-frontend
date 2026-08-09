@@ -1,0 +1,29 @@
+.finora-add-loan-container {
+  padding-bottom: 24px;
+}
+
+.finora-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background-color: #ffffff;
+}
+
+.finora-summary-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 24px;
+  position: sticky;
+  top: 88px;
+}
+
+.finora-summary-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.finora-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

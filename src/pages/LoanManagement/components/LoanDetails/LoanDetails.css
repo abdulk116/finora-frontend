@@ -1,0 +1,14 @@
+.finora-loan-details-container {
+  padding-bottom: 24px;
+}
+
+.finora-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background-color: #ffffff;
+}
+
+.MuiTableCell-head {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}

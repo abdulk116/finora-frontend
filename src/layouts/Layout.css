@@ -1,0 +1,59 @@
+/* Layout Styles */
+.finora-navbar {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.finora-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 8px;
+  width: 280px;
+}
+
+/* Sidebar Styles */
+.finora-sidebar-inner {
+  height: 100%;
+  background-color: #ffffff;
+  padding: 16px;
+}
+
+.finora-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.finora-nav-item {
+  border-radius: 8px !important;
+  color: #475569 !important;
+}
+
+.finora-nav-item:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.finora-nav-item.active {
+  background-color: #f0fdf4 !important;
+  color: #0d9488 !important;
+}
+
+.finora-nav-item.active .finora-nav-icon {
+  color: #0d9488 !important;
+}
+
+.finora-nav-icon {
+  min-width: 40px !important;
+  color: #64748b;
+}
+
+/* Card Styling */
+.finora-stat-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+}
