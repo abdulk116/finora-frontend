@@ -1,6 +1,5 @@
 import './App.css'
 import PublicRoutes from "./routes/PublicRoutes";
-import "./app.css";
 import PrivateRoutes from './routes/PrivateRoutes';
 import { useSelector } from 'react-redux';
 
