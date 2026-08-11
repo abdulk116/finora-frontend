@@ -19,7 +19,7 @@ const PrivateRoutes = () => {
         <Route path="/expenses" element={< MonthlyExpenses/>} />
 
         {/* ===================================== FALLBACK ===================================== */}
-      <Route path="*" element={ <Navigate to="/" replace /> } />
+      <Route path="*" element={ <Navigate to="/dashboard" replace /> } />
       </Routes>
     </AppLayout>
   )
