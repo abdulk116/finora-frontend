@@ -1,36 +1,108 @@
+/* =========================================================
+   FINORA ROOT / GLOBAL CSS
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
 * {
-  margin: unset;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+
+/* =========================================================
+   ROOT VARIABLES
+   ========================================================= */
 
 #root {
   height: 100%;
+
+  /* -------------------------------------------------------
+     Typography
+     ------------------------------------------------------- */
+
+  --finora-font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+
+  /* -------------------------------------------------------
+     Primary
+     ------------------------------------------------------- */
+
   --finora-primary: #4f46e5;
   --finora-primary-dark: #4338ca;
   --finora-primary-light: #eef2ff;
   --finora-primary-soft: #f5f7ff;
 
+
+  /* -------------------------------------------------------
+     Text
+     ------------------------------------------------------- */
+
   --finora-text-primary: #0f172a;
   --finora-text-secondary: #64748b;
   --finora-text-muted: #94a3b8;
 
+
+  /* -------------------------------------------------------
+     Background
+     ------------------------------------------------------- */
+
   --finora-background: #f8fafc;
   --finora-surface: #ffffff;
 
+
+  /* -------------------------------------------------------
+     Borders
+     ------------------------------------------------------- */
+
   --finora-border: #e2e8f0;
   --finora-border-light: #f1f5f9;
+
+
+  /* -------------------------------------------------------
+     Status
+     ------------------------------------------------------- */
 
   --finora-danger: #ef4444;
   --finora-danger-light: #fef2f2;
 
   --finora-success: #16a34a;
 
+
+  /* -------------------------------------------------------
+     Layout
+     ------------------------------------------------------- */
+
   --finora-sidebar-width: 260px;
   --finora-navbar-height: 64px;
+
+
+  /* -------------------------------------------------------
+     Border Radius
+     ------------------------------------------------------- */
 
   --finora-radius-sm: 8px;
   --finora-radius-md: 10px;
   --finora-radius-lg: 14px;
+
+
+  /* -------------------------------------------------------
+     Shadows
+     ------------------------------------------------------- */
 
   --finora-shadow-sm:
     0 2px 8px rgba(15, 23, 42, 0.025);
@@ -42,7 +114,146 @@
     0 15px 40px rgba(15, 23, 42, 0.12);
 }
 
+
+/* =========================================================
+   HTML / BODY
+   ========================================================= */
+
+html {
+  width: 100%;
+  height: 100%;
+  font-family: var(--finora-font-family);
+  background: var(--finora-background);
+}
+
+
 body {
-  height: 100dvh;
-  width: 100dvw;
+  width: 100%;
+  min-height: 100dvh;
+
+  font-family: var(--finora-font-family);
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: var(--finora-text-primary);
+  background: var(--finora-background);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+
+  font-family: var(--finora-font-family);
+  color: var(--finora-text-primary);
+
+  letter-spacing: -0.02em;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   IMAGES
+   ========================================================= */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* =========================================================
+   FINANCIAL NUMBERS
+   ========================================================= */
+
+.finora-number,
+.finora-amount,
+.finora-currency,
+.finora-summary-value,
+.finora-expense-amount {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+
+/* Chrome / Edge / Safari */
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

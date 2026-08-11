@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import {
   Box,
   Card,
@@ -36,7 +37,6 @@ import {
   AccessTime,
   Search,
   ReceiptLong,
-  TrendingUp,
   AccountBalanceWallet,
   MoreVert,
   Refresh,
@@ -47,15 +47,20 @@ import AddExpenseModal from './Modals/AddExpenseModal';
 import expensesApi from '../../api/expensesApi';
 
 import './Expenses.css';
+
 import ExpenseCalendar from './Components/ExpenseCalendar';
 import ExpenseSummaryCards from './Components/ExpenseSummaryCards';
-
 
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                    */
 /* -------------------------------------------------------------------------- */
 
-const STATUS_OPTIONS = ['All', 'Completed', 'Pending', 'Overdue'];
+const STATUS_OPTIONS = [
+  'All',
+  'Completed',
+  'Pending',
+  'Overdue',
+];
 
 const formatCurrency = (amount = 0) =>
   `₹${Number(amount || 0).toLocaleString('en-IN')}`;
@@ -75,6 +80,10 @@ const formatDate = (date) => {
     year: 'numeric',
   });
 };
+
+/* -------------------------------------------------------------------------- */
+/* Status Config                                                              */
+/* -------------------------------------------------------------------------- */
 
 const getStatusConfig = (status) => {
   switch (status) {
@@ -99,12 +108,15 @@ const getStatusConfig = (status) => {
   }
 };
 
-
 /* -------------------------------------------------------------------------- */
 /* Status Chip                                                                */
 /* -------------------------------------------------------------------------- */
 
-const StatusChip = ({ status, onChange, disabled = false }) => {
+const StatusChip = ({
+  status,
+  onChange,
+  disabled = false,
+}) => {
   const config = getStatusConfig(status);
 
   return (
@@ -122,10 +134,7 @@ const StatusChip = ({ status, onChange, disabled = false }) => {
           icon={config.icon}
           size="small"
           variant="outlined"
-          sx={{
-            fontWeight: 600,
-            cursor: disabled ? 'default' : 'pointer',
-          }}
+          className="finora-expense-status-chip"
         />
       )}
       sx={{
@@ -171,7 +180,6 @@ const StatusChip = ({ status, onChange, disabled = false }) => {
     </Select>
   );
 };
-
 
 /* -------------------------------------------------------------------------- */
 /* Summary Card                                                               */
@@ -225,9 +233,8 @@ const SummaryCard = ({
   );
 };
 
-
 /* -------------------------------------------------------------------------- */
-/* Loading Skeleton                                                           */
+/* Desktop Table Skeleton                                                     */
 /* -------------------------------------------------------------------------- */
 
 const ExpenseTableSkeleton = () => {
@@ -248,11 +255,21 @@ const ExpenseTableSkeleton = () => {
           </TableCell>
 
           <TableCell align="right">
-            <Skeleton width={90} sx={{ ml: 'auto' }} />
+            <Skeleton
+              width={90}
+              sx={{ ml: 'auto' }}
+            />
           </TableCell>
 
           <TableCell align="center">
-            <Skeleton width={100} sx={{ mx: 'auto' }} />
+            <Skeleton
+              width={100}
+              sx={{ mx: 'auto' }}
+            />
+          </TableCell>
+
+          <TableCell>
+            <Skeleton width={35} />
           </TableCell>
         </TableRow>
       ))}
@@ -260,12 +277,274 @@ const ExpenseTableSkeleton = () => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+/* Mobile Card Skeleton                                                       */
+/* -------------------------------------------------------------------------- */
+
+const ExpenseMobileSkeleton = () => {
+  return (
+    <Box className="finora-expense-mobile-skeleton">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <Card
+          key={index}
+          elevation={0}
+          className="finora-expense-mobile-card"
+        >
+          <Box className="finora-expense-mobile-card-top">
+            <Skeleton
+              variant="rounded"
+              width={42}
+              height={42}
+            />
+
+            <Box sx={{ flex: 1 }}>
+              <Skeleton width="55%" height={22} />
+              <Skeleton width="35%" height={18} />
+            </Box>
+
+            <Skeleton
+              variant="rounded"
+              width={70}
+              height={26}
+            />
+          </Box>
+
+          <Skeleton
+            width="45%"
+            height={32}
+            sx={{ mt: 2 }}
+          />
+
+          <Box className="finora-expense-mobile-details">
+            <Skeleton width="35%" />
+            <Skeleton width="35%" />
+          </Box>
+        </Card>
+      ))}
+    </Box>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Mobile Expense Card                                                        */
+/* -------------------------------------------------------------------------- */
+
+const ExpenseMobileCard = ({
+  expense,
+  index,
+  onStatusChange,
+  onMenuOpen,
+}) => {
+  const status = expense?.status || 'Pending';
+
+  const isCompleted = status === 'Completed';
+  const isOverdue = status === 'Overdue';
+
+  return (
+    <Card
+      elevation={0}
+      className={`
+        finora-expense-mobile-card
+        ${isCompleted ? 'is-completed' : ''}
+        ${isOverdue ? 'is-overdue' : ''}
+      `}
+    >
+      <CardContent className="finora-expense-mobile-card-content">
+
+        {/* -------------------------------------------------------------- */}
+        {/* Card Header                                                    */}
+        {/* -------------------------------------------------------------- */}
+
+        <Box className="finora-expense-mobile-card-header">
+
+          <Box className="finora-expense-mobile-expense-info">
+
+            <Box className="finora-expense-mobile-icon">
+              <ReceiptLong fontSize="small" />
+            </Box>
+
+            <Box className="finora-expense-mobile-title-wrapper">
+
+              <Typography
+                variant="subtitle1"
+                className="finora-expense-mobile-title"
+              >
+                {expense?.related || 'Unnamed expense'}
+              </Typography>
+
+              {expense?.category && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  className="finora-expense-mobile-category"
+                >
+                  {expense.category}
+                </Typography>
+              )}
+
+            </Box>
+
+          </Box>
+
+          <Button
+            size="small"
+            className="finora-expense-mobile-more"
+            onClick={(event) =>
+              onMenuOpen(event, expense)
+            }
+          >
+            <MoreVert fontSize="small" />
+          </Button>
+
+        </Box>
+
+        {/* -------------------------------------------------------------- */}
+        {/* Amount                                                         */}
+        {/* -------------------------------------------------------------- */}
+
+        <Box className="finora-expense-mobile-amount-section">
+
+          <Typography
+            variant="caption"
+            color="text.secondary"
+          >
+            Amount
+          </Typography>
+
+          <Typography
+            variant="h5"
+            className="finora-expense-mobile-amount"
+          >
+            {formatCurrency(expense?.amount)}
+          </Typography>
+
+        </Box>
+
+        {/* -------------------------------------------------------------- */}
+        {/* Details                                                        */}
+        {/* -------------------------------------------------------------- */}
+
+        <Box className="finora-expense-mobile-details">
+
+          <Box className="finora-expense-mobile-detail-item">
+
+            <Typography
+              variant="caption"
+              color="text.secondary"
+            >
+              Date
+            </Typography>
+
+            <Typography
+              variant="body2"
+              fontWeight={600}
+            >
+              {formatDate(expense?.dueDate)}
+            </Typography>
+
+          </Box>
+
+          <Box className="finora-expense-mobile-detail-item">
+
+            <Typography
+              variant="caption"
+              color="text.secondary"
+            >
+              Expense #
+            </Typography>
+
+            <Typography
+              variant="body2"
+              fontWeight={600}
+            >
+              #{index + 1}
+            </Typography>
+
+          </Box>
+
+        </Box>
+
+        {/* -------------------------------------------------------------- */}
+        {/* Bottom Action Row                                               */}
+        {/* -------------------------------------------------------------- */}
+
+        <Box className="finora-expense-mobile-actions">
+
+          <Box className="finora-expense-mobile-status">
+
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              className="finora-expense-mobile-status-label"
+            >
+              Status
+            </Typography>
+
+            <StatusChip
+              status={status}
+              onChange={(newStatus) =>
+                onStatusChange(
+                  expense?._id,
+                  newStatus
+                )
+              }
+            />
+
+          </Box>
+
+        </Box>
+
+      </CardContent>
+    </Card>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Mobile Empty State                                                         */
+/* -------------------------------------------------------------------------- */
+
+const MobileEmptyState = ({ onAdd }) => {
+  return (
+    <Box className="finora-expense-mobile-empty">
+
+      <Box className="finora-expense-mobile-empty-icon">
+        <ReceiptLong />
+      </Box>
+
+      <Typography
+        variant="h6"
+        fontWeight={700}
+      >
+        No expenses found
+      </Typography>
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+      >
+        Try changing your filters or add a new
+        expense.
+      </Typography>
+
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={onAdd}
+        className="finora-expense-mobile-empty-button"
+      >
+        Add Expense
+      </Button>
+
+    </Box>
+  );
+};
 
 /* -------------------------------------------------------------------------- */
 /* Main Component                                                             */
 /* -------------------------------------------------------------------------- */
 
 export default function MonthlyExpenses() {
+
   const [viewMode, setViewMode] = useState('table');
 
   const [data, setData] = useState({
@@ -278,20 +557,30 @@ export default function MonthlyExpenses() {
   });
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [submitting, setSubmitting] =
+    useState(false);
 
-  const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: null,
-    endDate: null,
-  });
+  const [loading, setLoading] =
+    useState(true);
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [searchTerm, setSearchTerm] =
+    useState('');
 
+  const [statusFilter, setStatusFilter] =
+    useState('All');
+
+  const [selectedDateRange, setSelectedDateRange] =
+    useState({
+      startDate: null,
+      endDate: null,
+    });
+
+  const [menuAnchor, setMenuAnchor] =
+    useState(null);
+
+  const [selectedExpense, setSelectedExpense] =
+    useState(null);
 
   /* ---------------------------------------------------------------------- */
   /* Fetch Expenses                                                         */
@@ -301,7 +590,8 @@ export default function MonthlyExpenses() {
     try {
       setLoading(true);
 
-      const res = await expensesApi?.getAllExpensesByUserId();
+      const res =
+        await expensesApi?.getAllExpensesByUserId();
 
       if (res?.success) {
         const expensesList = Array.isArray(res?.data)
@@ -310,7 +600,8 @@ export default function MonthlyExpenses() {
 
         const summary = expensesList.reduce(
           (acc, item) => {
-            const amount = Number(item?.amount) || 0;
+            const amount =
+              Number(item?.amount) || 0;
 
             acc.totalAmount += amount;
 
@@ -353,7 +644,6 @@ export default function MonthlyExpenses() {
     }
   }, []);
 
-
   /* ---------------------------------------------------------------------- */
   /* Initial API Call                                                       */
   /* ---------------------------------------------------------------------- */
@@ -362,24 +652,33 @@ export default function MonthlyExpenses() {
     getExpensesList();
   }, [getExpensesList]);
 
-
   /* ---------------------------------------------------------------------- */
   /* Filter Expenses                                                        */
   /* ---------------------------------------------------------------------- */
 
   const filteredExpenses = useMemo(() => {
-    const search = searchTerm.trim().toLowerCase();
+    const search =
+      searchTerm.trim().toLowerCase();
 
     return data.expenses.filter((expense) => {
+
       const matchesSearch =
         !search ||
-        expense?.related?.toLowerCase?.().includes(search);
+        expense?.related
+          ?.toLowerCase?.()
+          .includes(search) ||
+        expense?.category
+          ?.toLowerCase?.()
+          .includes(search);
 
       const matchesStatus =
         statusFilter === 'All' ||
         expense?.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
     });
   }, [
     data.expenses,
@@ -387,25 +686,32 @@ export default function MonthlyExpenses() {
     statusFilter,
   ]);
 
-
   /* ---------------------------------------------------------------------- */
-  /* Derived Statistics                                                     */
+  /* Statistics                                                             */
   /* ---------------------------------------------------------------------- */
 
   const statistics = useMemo(() => {
-    const total = data.expenses.length;
 
-    const completed = data.expenses.filter(
-      (item) => item?.status === 'Completed'
-    ).length;
+    const total =
+      data.expenses.length;
 
-    const pending = data.expenses.filter(
-      (item) => item?.status === 'Pending'
-    ).length;
+    const completed =
+      data.expenses.filter(
+        (item) =>
+          item?.status === 'Completed'
+      ).length;
 
-    const overdue = data.expenses.filter(
-      (item) => item?.status === 'Overdue'
-    ).length;
+    const pending =
+      data.expenses.filter(
+        (item) =>
+          item?.status === 'Pending'
+      ).length;
+
+    const overdue =
+      data.expenses.filter(
+        (item) =>
+          item?.status === 'Overdue'
+      ).length;
 
     return {
       total,
@@ -414,8 +720,8 @@ export default function MonthlyExpenses() {
       overdue,
       active: pending + overdue,
     };
-  }, [data.expenses]);
 
+  }, [data.expenses]);
 
   /* ---------------------------------------------------------------------- */
   /* Update Expense Status                                                  */
@@ -423,94 +729,116 @@ export default function MonthlyExpenses() {
 
   const handleStatusChange = useCallback(
     async (id, newStatus) => {
-      if (!id || !newStatus) return;
+
+      if (!id || !newStatus) {
+        return;
+      }
 
       try {
+
         const payload = {
           expenseId: id,
           status: newStatus,
         };
 
-        const res = await expensesApi?.updateExpenseStatus(
-          payload
-        );
+        const res =
+          await expensesApi?.updateExpenseStatus(
+            payload
+          );
 
         if (res?.success) {
           await getExpensesList();
         }
+
       } catch (error) {
+
         console.error(
           'Error updating expense status:',
           error?.message || error
         );
+
       }
+
     },
     [getExpensesList]
   );
-
 
   /* ---------------------------------------------------------------------- */
   /* Create Expense                                                         */
   /* ---------------------------------------------------------------------- */
 
-  const handleCreateExpense = async (payload) => {
+  const handleCreateExpense = async (
+    payload
+  ) => {
+
     try {
+
       setSubmitting(true);
 
-      const res = await expensesApi?.createExpenses(payload);
+      const res =
+        await expensesApi?.createExpenses(
+          payload
+        );
 
       if (res?.success) {
+
         await getExpensesList();
+
         setModalOpen(false);
       }
+
     } catch (error) {
+
       console.error(
         'Failed to create expense:',
         error?.message || error
       );
+
     } finally {
+
       setSubmitting(false);
+
     }
   };
-
 
   /* ---------------------------------------------------------------------- */
   /* Date Filter                                                            */
   /* ---------------------------------------------------------------------- */
 
-  const handleFilterChange = ({ startDate, endDate }) => {
+  const handleFilterChange = ({
+    startDate,
+    endDate,
+  }) => {
+
     setSelectedDateRange({
       startDate,
       endDate,
     });
 
-    /*
-      Your existing API currently exposes getAllExpensesByUserId().
-      Therefore we keep the date filter state ready here without
-      inventing a new API method.
-
-      When your backend supports:
-      getExpensesByRange(startDate, endDate)
-
-      this handler can call that endpoint.
-    */
   };
 
-
   /* ---------------------------------------------------------------------- */
-  /* Menu                                                                   */
+  /* Context Menu                                                           */
   /* ---------------------------------------------------------------------- */
 
-  const handleMenuOpen = (event, expense) => {
-    setMenuAnchor(event.currentTarget);
+  const handleMenuOpen = (
+    event,
+    expense
+  ) => {
+
+    setMenuAnchor(
+      event.currentTarget
+    );
+
     setSelectedExpense(expense);
   };
 
   const handleMenuClose = () => {
+
     setMenuAnchor(null);
+
     setSelectedExpense(null);
   };
-
 
   /* ---------------------------------------------------------------------- */
   /* Render                                                                 */
@@ -522,9 +850,9 @@ export default function MonthlyExpenses() {
       className="finora-expenses-page"
     >
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Page Header                                                       */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================== */}
+      {/* PAGE HEADER                                                        */}
+      {/* ================================================================== */}
 
       <Box className="finora-expenses-header">
 
@@ -540,15 +868,17 @@ export default function MonthlyExpenses() {
             variant="body2"
             color="text.secondary"
           >
-            Track your spending, payments and upcoming
-            expenses.
+            Track your spending, payments and
+            upcoming expenses.
           </Typography>
         </Box>
 
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => setModalOpen(true)}
+          onClick={() =>
+            setModalOpen(true)
+          }
           className="finora-expenses-add-button"
         >
           Add Expense
@@ -556,106 +886,60 @@ export default function MonthlyExpenses() {
 
       </Box>
 
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Summary Cards                                                     */}
-      {/* ---------------------------------------------------------------- */}
-
-      {/* <Grid
-        container
-        spacing={2}
-        className="finora-expense-summary-grid"
-      >
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <SummaryCard
-            title="Total Expenses"
-            value={formatCurrency(
-              data.summary.totalAmount
-            )}
-            subtitle={`${statistics.total} total expenses`}
-            icon={<ReceiptLong />}
-            className="summary-total"
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <SummaryCard
-            title="Paid Amount"
-            value={formatCurrency(
-              data.summary.paidAmount
-            )}
-            subtitle={`${statistics.completed} completed`}
-            icon={<CheckCircleOutlined />}
-            className="summary-paid"
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <SummaryCard
-            title="Outstanding"
-            value={formatCurrency(
-              data.summary.balanceAmount
-            )}
-            subtitle={`${statistics.pending} pending • ${statistics.overdue} overdue`}
-            icon={<AccountBalanceWallet />}
-            className="summary-balance"
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} lg={3}>
-          <SummaryCard
-            title="Payment Progress"
-            value={
-              data.summary.totalAmount > 0
-                ? `${Math.round(
-                  (data.summary.paidAmount /
-                    data.summary.totalAmount) *
-                  100
-                )}%`
-                : '0%'
-            }
-            subtitle="Expenses completed"
-            icon={<TrendingUp />}
-            className="summary-progress"
-          />
-        </Grid>
-
-      </Grid> */}
+      {/* ================================================================== */}
+      {/* SUMMARY                                                            */}
+      {/* ================================================================== */}
 
       <Grid
         container
         spacing={2}
         className="finora-expense-summary-grid"
       >
+
         <ExpenseSummaryCards
-          totalExpenses={data.summary.totalAmount}
-          paidAmount={data.summary.paidAmount}
-          outstandingAmount={data.summary.balanceAmount}
-
-          totalExpensesCount={data?.expenses?.length || 0}
-          completedCount={statistics.completed}
-          pendingCount={statistics.pending}
-          overdueCount={statistics.overdue}
-
-          startDate={selectedDateRange?.startDate}
-          endDate={selectedDateRange?.endDate}
+          totalExpenses={
+            data.summary.totalAmount
+          }
+          paidAmount={
+            data.summary.paidAmount
+          }
+          outstandingAmount={
+            data.summary.balanceAmount
+          }
+          totalExpensesCount={
+            data?.expenses?.length || 0
+          }
+          completedCount={
+            statistics.completed
+          }
+          pendingCount={
+            statistics.pending
+          }
+          overdueCount={
+            statistics.overdue
+          }
+          startDate={
+            selectedDateRange?.startDate
+          }
+          endDate={
+            selectedDateRange?.endDate
+          }
         />
+
       </Grid>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Expense Tracker                                                   */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================== */}
+      {/* MAIN CARD                                                          */}
+      {/* ================================================================== */}
 
       <Card
         elevation={0}
         className="finora-expense-main-card"
       >
 
-        {/* Toolbar */}
+        {/* ================================================================ */}
+        {/* TOOLBAR                                                          */}
+        {/* ================================================================ */}
 
         <Box className="finora-expense-toolbar">
 
@@ -671,19 +955,24 @@ export default function MonthlyExpenses() {
               variant="body2"
               color="text.secondary"
             >
-              {filteredExpenses.length} expense
-              {filteredExpenses.length !== 1 ? 's' : ''}
-              {' '}shown
+              {filteredExpenses.length}{' '}
+              expense
+              {filteredExpenses.length !== 1
+                ? 's'
+                : ''}{' '}
+              shown
             </Typography>
           </Box>
-
 
           <Box className="finora-expense-view-controls">
 
             <ToggleButtonGroup
               value={viewMode}
               exclusive
-              onChange={(event, value) => {
+              onChange={(
+                event,
+                value
+              ) => {
                 if (value) {
                   setViewMode(value);
                 }
@@ -708,8 +997,9 @@ export default function MonthlyExpenses() {
 
         </Box>
 
-
-        {/* Filters */}
+        {/* ================================================================ */}
+        {/* FILTERS                                                          */}
+        {/* ================================================================ */}
 
         <Box className="finora-expense-filters">
 
@@ -718,7 +1008,9 @@ export default function MonthlyExpenses() {
             placeholder="Search expenses..."
             value={searchTerm}
             onChange={(event) =>
-              setSearchTerm(event.target.value)
+              setSearchTerm(
+                event.target.value
+              )
             }
             className="finora-expense-search"
             InputProps={{
@@ -730,39 +1022,46 @@ export default function MonthlyExpenses() {
             }}
           />
 
-
           <Select
             size="small"
             value={statusFilter}
             onChange={(event) =>
-              setStatusFilter(event.target.value)
+              setStatusFilter(
+                event.target.value
+              )
             }
             className="finora-expense-status-filter"
           >
-            {STATUS_OPTIONS.map((status) => (
-              <MenuItem
-                key={status}
-                value={status}
-              >
-                {status === 'All'
-                  ? 'All Status'
-                  : status}
-              </MenuItem>
-            ))}
-          </Select>
 
+            {STATUS_OPTIONS.map(
+              (status) => (
+                <MenuItem
+                  key={status}
+                  value={status}
+                >
+                  {status === 'All'
+                    ? 'All Status'
+                    : status}
+                </MenuItem>
+              )
+            )}
+
+          </Select>
 
           <Box className="finora-expense-date-filter">
             <DateRangeFilter
-              onFilterChange={handleFilterChange}
+              onFilterChange={
+                handleFilterChange
+              }
             />
           </Box>
-
 
           <Button
             variant="outlined"
             startIcon={<Refresh />}
-            onClick={getExpensesList}
+            onClick={
+              getExpensesList
+            }
             disabled={loading}
             className="finora-refresh-button"
           >
@@ -771,260 +1070,321 @@ export default function MonthlyExpenses() {
 
         </Box>
 
-
-        {/* ---------------------------------------------------------------- */}
-        {/* Table View                                                       */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================= */}
+        {/* TABLE / MOBILE LIST VIEW                                         */}
+        {/* ================================================================= */}
 
         {viewMode === 'table' && (
+          <>
+            {/* ============================================================= */}
+            {/* DESKTOP TABLE                                                 */}
+            {/* ============================================================= */}
 
-          <TableContainer
-            component={Paper}
-            elevation={0}
-            className="finora-expense-table-container"
-          >
+            <Box className="finora-expense-desktop">
 
-            <Table
-              stickyHeader
-              className="finora-expense-table"
-            >
+              <TableContainer
+                component={Paper}
+                elevation={0}
+                className="finora-expense-table-container"
+              >
 
-              <TableHead>
+                <Table
+                  stickyHeader
+                  className="finora-expense-table"
+                >
 
-                <TableRow>
+                  <TableHead>
 
-                  <TableCell width={60}>
-                    #
-                  </TableCell>
+                    <TableRow>
 
-                  <TableCell>
-                    Date
-                  </TableCell>
+                      <TableCell width={60}>
+                        #
+                      </TableCell>
 
-                  <TableCell>
-                    Expense
-                  </TableCell>
+                      <TableCell>
+                        Date
+                      </TableCell>
 
-                  <TableCell align="right">
-                    Amount
-                  </TableCell>
+                      <TableCell>
+                        Expense
+                      </TableCell>
 
-                  <TableCell align="center">
-                    Status
-                  </TableCell>
+                      <TableCell align="right">
+                        Amount
+                      </TableCell>
 
-                  <TableCell
-                    align="right"
-                    width={60}
-                  />
+                      <TableCell align="center">
+                        Status
+                      </TableCell>
 
-                </TableRow>
+                      <TableCell
+                        align="right"
+                        width={60}
+                      />
 
-              </TableHead>
+                    </TableRow>
 
+                  </TableHead>
 
-              <TableBody>
+                  <TableBody>
 
-                {loading ? (
-                  <ExpenseTableSkeleton />
-                ) : filteredExpenses.length === 0 ? (
+                    {loading ? (
 
-                  <TableRow>
+                      <ExpenseTableSkeleton />
 
-                    <TableCell
-                      colSpan={6}
-                      align="center"
-                    >
+                    ) : filteredExpenses.length === 0 ? (
 
-                      <Box className="finora-expense-empty">
+                      <TableRow>
 
-                        <ReceiptLong />
-
-                        <Typography
-                          variant="h6"
-                          fontWeight={600}
+                        <TableCell
+                          colSpan={6}
+                          align="center"
                         >
-                          No expenses found
-                        </Typography>
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        >
-                          Try changing your filters or
-                          add a new expense.
-                        </Typography>
+                          <Box className="finora-expense-empty">
 
-                        <Button
-                          variant="contained"
-                          startIcon={<AddIcon />}
-                          onClick={() =>
-                            setModalOpen(true)
-                          }
-                        >
-                          Add Expense
-                        </Button>
+                            <ReceiptLong />
 
-                      </Box>
-
-                    </TableCell>
-
-                  </TableRow>
-
-                ) : (
-
-                  filteredExpenses.map(
-                    (row, index) => (
-
-                      <TableRow
-                        key={row?._id || index}
-                        hover
-                        className="finora-expense-row"
-                      >
-
-                        <TableCell>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                          >
-                            {index + 1}
-                          </Typography>
-                        </TableCell>
-
-
-                        <TableCell>
-                          <Typography
-                            variant="body2"
-                            fontWeight={500}
-                          >
-                            {formatDate(
-                              row?.dueDate
-                            )}
-                          </Typography>
-                        </TableCell>
-
-
-                        <TableCell>
-
-                          <Box>
                             <Typography
-                              variant="body2"
+                              variant="h6"
                               fontWeight={600}
                             >
-                              {row?.related ||
-                                'Unnamed expense'}
+                              No expenses found
                             </Typography>
 
-                            {row?.category && (
-                              <Typography
-                                variant="caption"
-                                color="text.secondary"
-                              >
-                                {row.category}
-                              </Typography>
-                            )}
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              Try changing your
+                              filters or add a
+                              new expense.
+                            </Typography>
+
+                            <Button
+                              variant="contained"
+                              startIcon={
+                                <AddIcon />
+                              }
+                              onClick={() =>
+                                setModalOpen(true)
+                              }
+                            >
+                              Add Expense
+                            </Button>
+
                           </Box>
-
-                        </TableCell>
-
-
-                        <TableCell align="right">
-
-                          <Typography
-                            variant="body2"
-                            fontWeight={700}
-                            className="finora-expense-amount"
-                          >
-                            {formatCurrency(
-                              row?.amount
-                            )}
-                          </Typography>
-
-                        </TableCell>
-
-
-                        <TableCell align="center">
-
-                          <StatusChip
-                            status={
-                              row?.status ||
-                              'Pending'
-                            }
-                            onChange={(newStatus) =>
-                              handleStatusChange(
-                                row?._id,
-                                newStatus
-                              )
-                            }
-                          />
-
-                        </TableCell>
-
-
-                        <TableCell align="right">
-
-                          <Button
-                            size="small"
-                            onClick={(event) =>
-                              handleMenuOpen(
-                                event,
-                                row
-                              )
-                            }
-                            className="finora-expense-more-button"
-                          >
-                            <MoreVert
-                              fontSize="small"
-                            />
-                          </Button>
 
                         </TableCell>
 
                       </TableRow>
 
+                    ) : (
+
+                      filteredExpenses.map(
+                        (row, index) => (
+
+                          <TableRow
+                            key={
+                              row?._id ||
+                              index
+                            }
+                            hover
+                            className="finora-expense-row"
+                          >
+
+                            <TableCell>
+
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {index + 1}
+                              </Typography>
+
+                            </TableCell>
+
+                            <TableCell>
+
+                              <Typography
+                                variant="body2"
+                                fontWeight={500}
+                              >
+                                {formatDate(
+                                  row?.dueDate
+                                )}
+                              </Typography>
+
+                            </TableCell>
+
+                            <TableCell>
+
+                              <Box>
+
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={600}
+                                >
+                                  {row?.related ||
+                                    'Unnamed expense'}
+                                </Typography>
+
+                                {row?.category && (
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                  >
+                                    {row.category}
+                                  </Typography>
+                                )}
+
+                              </Box>
+
+                            </TableCell>
+
+                            <TableCell align="right">
+
+                              <Typography
+                                variant="body2"
+                                fontWeight={700}
+                                className="finora-expense-amount"
+                              >
+                                {formatCurrency(
+                                  row?.amount
+                                )}
+                              </Typography>
+
+                            </TableCell>
+
+                            <TableCell align="center">
+
+                              <StatusChip
+                                status={
+                                  row?.status ||
+                                  'Pending'
+                                }
+                                onChange={(
+                                  newStatus
+                                ) =>
+                                  handleStatusChange(
+                                    row?._id,
+                                    newStatus
+                                  )
+                                }
+                              />
+
+                            </TableCell>
+
+                            <TableCell align="right">
+
+                              <Button
+                                size="small"
+                                onClick={(
+                                  event
+                                ) =>
+                                  handleMenuOpen(
+                                    event,
+                                    row
+                                  )
+                                }
+                                className="finora-expense-more-button"
+                              >
+                                <MoreVert fontSize="small" />
+                              </Button>
+
+                            </TableCell>
+
+                          </TableRow>
+
+                        )
+                      )
+
+                    )}
+
+                  </TableBody>
+
+                </Table>
+
+              </TableContainer>
+
+            </Box>
+
+            {/* ============================================================= */}
+            {/* MOBILE CARDS                                                  */}
+            {/* ============================================================= */}
+
+            <Box className="finora-expense-mobile">
+
+              {loading ? (
+
+                <ExpenseMobileSkeleton />
+
+              ) : filteredExpenses.length === 0 ? (
+
+                <MobileEmptyState
+                  onAdd={() =>
+                    setModalOpen(true)
+                  }
+                />
+
+              ) : (
+
+                <Box className="finora-expense-mobile-list">
+
+                  {filteredExpenses.map(
+                    (expense, index) => (
+                      <ExpenseMobileCard
+                        key={
+                          expense?._id ||
+                          index
+                        }
+                        expense={expense}
+                        index={index}
+                        onStatusChange={
+                          handleStatusChange
+                        }
+                        onMenuOpen={
+                          handleMenuOpen
+                        }
+                      />
                     )
-                  )
+                  )}
 
-                )}
+                </Box>
 
-              </TableBody>
+              )}
 
-            </Table>
-
-          </TableContainer>
-
+            </Box>
+          </>
         )}
 
-
-        {/* ---------------------------------------------------------------- */}
-        {/* Calendar View                                                    */}
-        {/* ---------------------------------------------------------------- */}
+        {/* ================================================================= */}
+        {/* CALENDAR                                                          */}
+        {/* ================================================================= */}
 
         {viewMode === 'calendar' && (
           <ExpenseCalendar
             expenses={filteredExpenses}
             onExpenseClick={(expense) => {
-              console.log('Selected expense:', expense);
-
-              // Later:
-              // setSelectedExpense(expense);
-              // setExpenseDetailsOpen(true);
+              console.log(
+                'Selected expense:',
+                expense
+              );
             }}
             onDateClick={(date) => {
-              console.log('Selected date:', date);
-
-              // Later we can open AddExpenseModal
-              // with this date pre-filled.
+              console.log(
+                'Selected date:',
+                date
+              );
             }}
           />
         )}
 
       </Card>
 
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Expense Context Menu                                              */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================== */}
+      {/* CONTEXT MENU                                                       */}
+      {/* ================================================================== */}
 
       <Menu
         anchorEl={menuAnchor}
@@ -1065,14 +1425,15 @@ export default function MonthlyExpenses() {
 
       </Menu>
 
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Add Expense Modal                                                 */}
-      {/* ---------------------------------------------------------------- */}
+      {/* ================================================================== */}
+      {/* ADD EXPENSE MODAL                                                  */}
+      {/* ================================================================== */}
 
       <AddExpenseModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() =>
+          setModalOpen(false)
+        }
         onSubmit={handleCreateExpense}
         loading={submitting}
       />
