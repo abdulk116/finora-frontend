@@ -1,14 +1,545 @@
+/* =========================================================
+   FINORA - LOAN DETAILS
+   Modern / Clean / Responsive Finance UI
+   ========================================================= */
+
 .finora-loan-details-container {
-  padding-bottom: 24px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 4px 0 32px;
+  color: #0f172a;
+  box-sizing: border-box;
 }
+
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
 
 .finora-card {
+  background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
-  background-color: #ffffff;
+  border-radius: 16px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02) !important;
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.MuiTableCell-head {
-  color: #475569 !important;
-  font-weight: 600 !important;
+.finora-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.finora-loan-details-container>.MuiBox-root:first-child {
+  min-width: 0;
+}
+
+.finora-loan-details-container>.MuiBox-root:first-child .MuiTypography-h5 {
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  line-height: 1.25;
+}
+
+.finora-loan-details-container>.MuiBox-root:first-child .MuiIconButton-root {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.finora-loan-details-container>.MuiBox-root:first-child .MuiIconButton-root:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   STATUS CHIP
+   ========================================================= */
+
+.finora-loan-details-container .MuiChip-root {
+  border-radius: 8px;
+  font-weight: 600;
+  height: 28px;
+}
+
+.finora-loan-details-container .MuiChip-colorWarning {
+  background-color: #fff7ed;
+  color: #c2410c;
+}
+
+.finora-loan-details-container .MuiChip-colorSuccess {
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+
+/* =========================================================
+   DOWNLOAD BUTTON
+   ========================================================= */
+
+.finora-loan-details-container .MuiButton-outlined {
+  border-color: #cbd5e1;
+  color: #334155;
+  border-radius: 10px;
+  min-height: 42px;
+  padding: 8px 16px;
+  font-weight: 600;
+  text-transform: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.finora-loan-details-container .MuiButton-outlined:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+
+/* =========================================================
+   REPAYMENT PROGRESS
+   ========================================================= */
+
+.finora-loan-details-container .finora-card .MuiLinearProgress-root {
+  background-color: #e2e8f0;
+  overflow: hidden;
+}
+
+.finora-loan-details-container .finora-card .MuiLinearProgress-bar {
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+      #0d9488 0%,
+      #14b8a6 100%);
+}
+
+
+/* Progress information row */
+
+.finora-loan-details-container .finora-card .MuiGrid-container {
+  margin-top: 4px;
+}
+
+.finora-loan-details-container .finora-card .MuiGrid-item {
+  min-width: 0;
+}
+
+.finora-loan-details-container .finora-card .MuiGrid-item .MuiTypography-caption {
+  display: block;
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.finora-loan-details-container .finora-card .MuiGrid-item .MuiTypography-body1 {
+  color: #0f172a;
+}
+
+
+/* =========================================================
+   METRIC CARDS
+   ========================================================= */
+
+.finora-loan-details-container .MuiGrid-container>.MuiGrid-item .finora-card {
+  height: 100%;
+}
+
+.finora-loan-details-container .MuiGrid-container>.MuiGrid-item .finora-card .MuiCardContent-root {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.finora-loan-details-container .MuiGrid-container>.MuiGrid-item .MuiSvgIcon-root {
+  width: 22px;
+  height: 22px;
+}
+
+
+/* Metric icon containers */
+
+.finora-loan-details-container .MuiGrid-container>.MuiGrid-item .MuiCardContent-root>.MuiBox-root:first-child {
+  position: relative;
+}
+
+.finora-loan-details-container .MuiGrid-container>.MuiGrid-item .MuiCardContent-root>.MuiBox-root:first-child>.MuiBox-root:first-child {
+  background: #f0fdfa;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.finora-loan-details-container .MuiTabs-root {
+  min-height: 54px;
+}
+
+.finora-loan-details-container .MuiTabs-flexContainer {
+  gap: 4px;
+}
+
+.finora-loan-details-container .MuiTab-root {
+  min-height: 54px;
+  padding: 12px 18px;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.finora-loan-details-container .MuiTab-root:hover {
+  color: #0f766e;
+  background-color: #f8fafc;
+}
+
+.finora-loan-details-container .MuiTab-root.Mui-selected {
+  color: #0d9488;
+}
+
+.finora-loan-details-container .MuiTabs-indicator {
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background-color: #0d9488;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.finora-loan-details-container .MuiTableContainer-root {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.finora-loan-details-container .MuiTableContainer-root::-webkit-scrollbar {
+  height: 7px;
+}
+
+.finora-loan-details-container .MuiTableContainer-root::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.finora-loan-details-container .MuiTableContainer-root::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.finora-loan-details-container .MuiTable-root {
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+
+/* Table header */
+
+.finora-loan-details-container .MuiTableHead-root .MuiTableCell-root {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+/* Table body */
+
+.finora-loan-details-container .MuiTableBody-root .MuiTableCell-root {
+  color: #334155;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.finora-loan-details-container .MuiTableBody-root .MuiTableRow-root {
+  transition: background-color 0.15s ease;
+}
+
+.finora-loan-details-container .MuiTableBody-root .MuiTableRow-root:hover {
+  background-color: #f8fafc;
+}
+
+.finora-loan-details-container .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   TRANSACTION TYPE CHIPS
+   ========================================================= */
+
+.finora-loan-details-container .MuiTableBody-root .MuiChip-root {
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 7px;
+  text-transform: capitalize;
+}
+
+
+/* =========================================================
+   OVERVIEW TAB
+   ========================================================= */
+
+.finora-loan-details-container .MuiTabs-root+.MuiBox-root {
+  color: #0f172a;
+}
+
+.finora-loan-details-container .MuiTabs-root+.MuiBox-root .MuiTypography-subtitle2 {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+}
+
+.finora-loan-details-container .MuiTabs-root+.MuiBox-root .MuiTypography-body1 {
+  color: #0f172a;
+}
+
+
+/* =========================================================
+   ADD TRANSACTION AREA
+   ========================================================= */
+
+.finora-loan-details-container .MuiTableContainer-root+div {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.finora-loan-details-container .MuiTableContainer-root+div .MuiButton-contained {
+  min-height: 40px;
+  border-radius: 9px;
+  padding: 8px 18px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   MOBILE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .finora-loan-details-container {
+    padding-bottom: 24px;
+  }
+
+  .finora-loan-details-container>.MuiBox-root:first-child {
+    gap: 16px;
+  }
+
+  .finora-loan-details-container .MuiTabs-root {
+    overflow-x: auto;
+  }
+
+  .finora-loan-details-container .MuiTabs-scroller {
+    overflow-x: auto !important;
+  }
+
+  .finora-loan-details-container .MuiTab-root {
+    flex-shrink: 0;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .finora-loan-details-container {
+    padding: 0 0 20px;
+  }
+
+
+  /* Header */
+
+  .finora-loan-details-container>.MuiBox-root:first-child {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    margin-bottom: 18px !important;
+  }
+
+  .finora-loan-details-container>.MuiBox-root:first-child>.MuiBox:first-child {
+    width: 100%;
+  }
+
+  .finora-loan-details-container .MuiTypography-h5 {
+    font-size: 1.25rem;
+  }
+
+  .finora-loan-details-container>.MuiBox-root:first-child .MuiButton-outlined {
+    width: 100%;
+    justify-content: center;
+  }
+
+
+  /* Back button + title */
+
+  .finora-loan-details-container>.MuiBox-root:first-child>.MuiBox:first-child {
+    gap: 10px;
+  }
+
+  .finora-loan-details-container>.MuiBox-root:first-child>.MuiBox:first-child>.MuiBox:last-child {
+    min-width: 0;
+  }
+
+
+  /* Status */
+
+  .finora-loan-details-container .MuiChip-root {
+    max-width: 100px;
+  }
+
+
+  /* Cards */
+
+  .finora-loan-details-container .finora-card {
+    border-radius: 14px !important;
+  }
+
+  .finora-loan-details-container .finora-card .MuiCardContent-root {
+    padding: 16px;
+  }
+
+
+  /* Progress */
+
+  .finora-loan-details-container .finora-card .MuiLinearProgress-root {
+    height: 9px;
+  }
+
+
+  /* Progress metrics */
+
+  .finora-loan-details-container .finora-card .MuiGrid-item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+
+  /* Metric cards */
+
+  .finora-loan-details-container .MuiGrid-container {
+    margin-bottom: 20px;
+  }
+
+  .finora-loan-details-container .MuiGrid-container>.MuiGrid-item .MuiCardContent-root {
+    padding: 15px;
+  }
+
+
+  /* Tabs */
+
+  .finora-loan-details-container .MuiTabs-root {
+    min-height: 50px;
+  }
+
+  .finora-loan-details-container .MuiTab-root {
+    min-height: 50px;
+    font-size: 0.82rem;
+    padding: 10px 13px;
+  }
+
+
+  /* Tables */
+
+  .finora-loan-details-container .MuiTable-root {
+    min-width: 700px;
+  }
+
+  .finora-loan-details-container .MuiTableCell-root {
+    padding: 10px 12px;
+  }
+
+
+  /* Transaction button */
+
+  .finora-loan-details-container .MuiTableContainer-root+div {
+    padding: 12px;
+  }
+
+  .finora-loan-details-container .MuiTableContainer-root+div .MuiButton-root {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .finora-loan-details-container .MuiTypography-h5 {
+    font-size: 1.15rem;
+  }
+
+  .finora-loan-details-container .MuiTypography-h6 {
+    font-size: 1rem;
+  }
+
+  .finora-loan-details-container .MuiTypography-body1 {
+    font-size: 0.9rem;
+  }
+
+  .finora-loan-details-container .MuiTab-root {
+    padding-left: 11px;
+    padding-right: 11px;
+    font-size: 0.78rem;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .finora-loan-details-container *,
+  .finora-loan-details-container *::before,
+  .finora-loan-details-container *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

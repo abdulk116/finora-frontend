@@ -84,7 +84,19 @@ export default function LoanDetails() {
     }).format(amount);
   };
 
-  const progressPercentage = Math.round((loanPaidAmount / loanDetails?.totalAmount || 1) * 100);
+  const progressPercentage = useMemo(() => {
+    const total = Number(loanDetails?.totalAmount || 0);
+    const remaining = Number(loanDetails?.remainingAmount || 0);
+
+    if (total <= 0) return 0;
+
+    const paid = Math.max(0, total - remaining);
+
+    return Math.min(100, Math.round((paid / total) * 100));
+  }, [
+    loanDetails?.totalAmount,
+    loanDetails?.remainingAmount,
+  ]);
 
   const getTransactions = async () => {
     try {
@@ -128,7 +140,7 @@ export default function LoanDetails() {
     if (id) {
       getLoanDetails();
     }
-  }, []);
+  }, [id]);
 
   return (
     <Box className="finora-loan-details-container">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Card,
@@ -17,9 +17,14 @@ import {
   Chip,
   ToggleButtonGroup,
   ToggleButton,
-  IconButton,
   Button,
   Container,
+  TextField,
+  InputAdornment,
+  Skeleton,
+  Menu,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 
 import {
@@ -28,173 +33,300 @@ import {
   Add as AddIcon,
   CheckCircleOutlined,
   ErrorOutlined,
-  AccessTime
+  AccessTime,
+  Search,
+  ReceiptLong,
+  TrendingUp,
+  AccountBalanceWallet,
+  MoreVert,
+  Refresh,
 } from '@mui/icons-material';
+
 import DateRangeFilter from './Components/DateRangeFilter';
 import AddExpenseModal from './Modals/AddExpenseModal';
 import expensesApi from '../../api/expensesApi';
 
-const getFormatedMonth = {
-  0: 'Jan',
-  1: "Feb",
-  2: "Mar",
-  3: "Apr",
-  4: "May",
-  5: "Jun",
-  6: "Jul",
-  7: "Aug",
-  8: "Sep",
-  9: "Oct",
-  10: "Nov",
-  11: "Dec"
+import './Expenses.css';
+import ExpenseCalendar from './Components/ExpenseCalendar';
+import ExpenseSummaryCards from './Components/ExpenseSummaryCards';
 
-}
 
-// Custom Status Chip Renderer
-const StatusChip = ({ status, onChange }) => {
-  const getProps = () => {
-    switch (status) {
-      case 'Completed':
-        return { color: 'success', icon: <CheckCircleOutlined /> };
-      case 'Overdue':
-        return { color: 'error', icon: <ErrorOutlined /> };
-      case 'Pending':
-      default:
-        return { color: 'warning', icon: <AccessTime /> };
-    }
-  };
+/* -------------------------------------------------------------------------- */
+/* Helpers                                                                    */
+/* -------------------------------------------------------------------------- */
 
-  const { color } = getProps();
+const STATUS_OPTIONS = ['All', 'Completed', 'Pending', 'Overdue'];
+
+const formatCurrency = (amount = 0) =>
+  `₹${Number(amount || 0).toLocaleString('en-IN')}`;
+
+const formatDate = (date) => {
+  if (!date) return '-';
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return '-';
+  }
+
+  return parsedDate.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
+const getStatusConfig = (status) => {
+  switch (status) {
+    case 'Completed':
+      return {
+        color: 'success',
+        icon: <CheckCircleOutlined fontSize="small" />,
+      };
+
+    case 'Overdue':
+      return {
+        color: 'error',
+        icon: <ErrorOutlined fontSize="small" />,
+      };
+
+    case 'Pending':
+    default:
+      return {
+        color: 'warning',
+        icon: <AccessTime fontSize="small" />,
+      };
+  }
+};
+
+
+/* -------------------------------------------------------------------------- */
+/* Status Chip                                                                */
+/* -------------------------------------------------------------------------- */
+
+const StatusChip = ({ status, onChange, disabled = false }) => {
+  const config = getStatusConfig(status);
 
   return (
     <Select
       value={status}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(event) => onChange(event.target.value)}
       size="small"
       variant="standard"
       disableUnderline
+      disabled={disabled}
+      renderValue={() => (
+        <Chip
+          label={status}
+          color={config.color}
+          icon={config.icon}
+          size="small"
+          variant="outlined"
+          sx={{
+            fontWeight: 600,
+            cursor: disabled ? 'default' : 'pointer',
+          }}
+        />
+      )}
       sx={{
+        minWidth: 115,
+
         '& .MuiSelect-select': {
-          p: 0,
+          padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+        },
+
+        '& .MuiSelect-icon': {
+          display: 'none',
         },
       }}
     >
       <MenuItem value="Completed">
-        <Chip label="Completed" color="success" size="small" />
+        <Chip
+          label="Completed"
+          color="success"
+          size="small"
+          variant="outlined"
+        />
       </MenuItem>
+
       <MenuItem value="Pending">
-        <Chip label="Pending" color="warning" size="small" />
+        <Chip
+          label="Pending"
+          color="warning"
+          size="small"
+          variant="outlined"
+        />
       </MenuItem>
+
       <MenuItem value="Overdue">
-        <Chip label="Overdue" color="error" size="small" />
+        <Chip
+          label="Overdue"
+          color="error"
+          size="small"
+          variant="outlined"
+        />
       </MenuItem>
     </Select>
   );
 };
 
-const earnAmountPerDay = (balanceAmt = 0) => {
-  const now = new Date();
-  const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const currentDate = now.getDate();
-  const earnAmtPerDay = balanceAmt / (totalDays - currentDate)
 
+/* -------------------------------------------------------------------------- */
+/* Summary Card                                                               */
+/* -------------------------------------------------------------------------- */
+
+const SummaryCard = ({
+  title,
+  value,
+  subtitle,
+  icon,
+  className = '',
+}) => {
+  return (
+    <Card
+      elevation={0}
+      className={`finora-expense-summary-card ${className}`}
+    >
+      <CardContent>
+        <Box className="finora-expense-summary-top">
+          <Box className="finora-expense-summary-icon">
+            {icon}
+          </Box>
+        </Box>
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          className="finora-expense-summary-title"
+        >
+          {title}
+        </Typography>
+
+        <Typography
+          variant="h5"
+          className="finora-expense-summary-value"
+        >
+          {value}
+        </Typography>
+
+        {subtitle && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            className="finora-expense-summary-subtitle"
+          >
+            {subtitle}
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+
+/* -------------------------------------------------------------------------- */
+/* Loading Skeleton                                                           */
+/* -------------------------------------------------------------------------- */
+
+const ExpenseTableSkeleton = () => {
   return (
     <>
-      <div>₹{Math.ceil(earnAmtPerDay)} / day</div>
-      <div>{(totalDays - currentDate)} days left</div>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <TableRow key={index}>
+          <TableCell>
+            <Skeleton width={30} />
+          </TableCell>
+
+          <TableCell>
+            <Skeleton width={100} />
+          </TableCell>
+
+          <TableCell>
+            <Skeleton width={140} />
+          </TableCell>
+
+          <TableCell align="right">
+            <Skeleton width={90} sx={{ ml: 'auto' }} />
+          </TableCell>
+
+          <TableCell align="center">
+            <Skeleton width={100} sx={{ mx: 'auto' }} />
+          </TableCell>
+        </TableRow>
+      ))}
     </>
-  )
-}
+  );
+};
+
+
+/* -------------------------------------------------------------------------- */
+/* Main Component                                                             */
+/* -------------------------------------------------------------------------- */
 
 export default function MonthlyExpenses() {
-  const [viewMode, setViewMode] = useState('table'); // 'table' | 'calendar'
-  const [selectedMonth, setSelectedMonth] = useState(3); // March
-  const [selectedYear, setSelectedYear] = useState(2026);
+  const [viewMode, setViewMode] = useState('table');
 
-  // Mock initial state based on sheet image
   const [data, setData] = useState({
-    summary: { totalAmount: 0, paidAmount: 0, balanceAmount: 0 },
-    expenses: []
+    summary: {
+      totalAmount: 0,
+      paidAmount: 0,
+      balanceAmount: 0,
+    },
+    expenses: [],
   });
+
   const [modalOpen, setModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const activeExpenses = data?.expenses?.filter((item) => item?.status !== "Completed")?.length || 0;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
-  const handleStatusChange = async (id, newStatus) => {
-    if (!id) return;
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    startDate: null,
+    endDate: null,
+  });
 
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Fetch Expenses                                                         */
+  /* ---------------------------------------------------------------------- */
+
+  const getExpensesList = useCallback(async () => {
     try {
-      const payload = {
-        expenseId: id,
-        status: newStatus
-      }
-      const res = await expensesApi?.updateExpenseStatus(payload)
+      setLoading(true);
 
-      if (res?.success) {
-        getExpensesList();
-      }
-    } catch (error) {
-      console.log("Error in update expense status", error?.message)
-    }
-  };
-
-  // Fetch expenses when filter date changes
-  const handleFilterChange = async ({ startDate, endDate }) => {
-    // try {
-    //   setLoading(true);
-    //   // Fetch expenses between start and end dates from backend
-    //   const response = await expenseApi.getExpensesByRange(startDate, endDate);
-    //   setExpenses(response.expenses);
-    // } catch (error) {
-    //   console.error('Failed to fetch filtered expenses:', error);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
-
-  const handleCreateExpense = async (payload) => {
-    try {
-      setSubmitting(true);
-
-      // Send API request
-      const res = await expensesApi.createExpenses(payload);
-      if (res?.success) {
-        getExpensesList();
-      }
-
-      setModalOpen(false);
-    } catch (error) {
-      console.error('Failed to create expense:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const getExpensesList = async () => {
-    try {
       const res = await expensesApi?.getAllExpensesByUserId();
 
       if (res?.success) {
-        const expensesList = res?.data || [];
+        const expensesList = Array.isArray(res?.data)
+          ? res.data
+          : [];
 
-        // Calculate all summary metrics in a single O(N) iteration
         const summary = expensesList.reduce(
           (acc, item) => {
             const amount = Number(item?.amount) || 0;
-            const status = item?.status;
 
             acc.totalAmount += amount;
 
-            if (status === 'Completed') {
+            if (item?.status === 'Completed') {
               acc.paidAmount += amount;
-            } else if (status === 'Pending' || status === 'Overdue') {
+            } else {
               acc.balanceAmount += amount;
             }
 
             return acc;
           },
-          { totalAmount: 0, paidAmount: 0, balanceAmount: 0 } // Initial values
+          {
+            totalAmount: 0,
+            paidAmount: 0,
+            balanceAmount: 0,
+          }
         );
 
         setData({
@@ -202,220 +334,741 @@ export default function MonthlyExpenses() {
           expenses: expensesList,
         });
       } else {
-        // Fallback state if API returns success: false or empty payload
         setData({
-          summary: { totalAmount: 0, paidAmount: 0, balanceAmount: 0 },
+          summary: {
+            totalAmount: 0,
+            paidAmount: 0,
+            balanceAmount: 0,
+          },
           expenses: [],
         });
       }
     } catch (error) {
-      console.error('Error in get expenses list:', error?.message || error);
+      console.error(
+        'Error fetching expenses:',
+        error?.message || error
+      );
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Initial API Call                                                       */
+  /* ---------------------------------------------------------------------- */
 
   useEffect(() => {
     getExpensesList();
-  }, []);
+  }, [getExpensesList]);
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Filter Expenses                                                        */
+  /* ---------------------------------------------------------------------- */
+
+  const filteredExpenses = useMemo(() => {
+    const search = searchTerm.trim().toLowerCase();
+
+    return data.expenses.filter((expense) => {
+      const matchesSearch =
+        !search ||
+        expense?.related?.toLowerCase?.().includes(search);
+
+      const matchesStatus =
+        statusFilter === 'All' ||
+        expense?.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [
+    data.expenses,
+    searchTerm,
+    statusFilter,
+  ]);
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Derived Statistics                                                     */
+  /* ---------------------------------------------------------------------- */
+
+  const statistics = useMemo(() => {
+    const total = data.expenses.length;
+
+    const completed = data.expenses.filter(
+      (item) => item?.status === 'Completed'
+    ).length;
+
+    const pending = data.expenses.filter(
+      (item) => item?.status === 'Pending'
+    ).length;
+
+    const overdue = data.expenses.filter(
+      (item) => item?.status === 'Overdue'
+    ).length;
+
+    return {
+      total,
+      completed,
+      pending,
+      overdue,
+      active: pending + overdue,
+    };
+  }, [data.expenses]);
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Update Expense Status                                                  */
+  /* ---------------------------------------------------------------------- */
+
+  const handleStatusChange = useCallback(
+    async (id, newStatus) => {
+      if (!id || !newStatus) return;
+
+      try {
+        const payload = {
+          expenseId: id,
+          status: newStatus,
+        };
+
+        const res = await expensesApi?.updateExpenseStatus(
+          payload
+        );
+
+        if (res?.success) {
+          await getExpensesList();
+        }
+      } catch (error) {
+        console.error(
+          'Error updating expense status:',
+          error?.message || error
+        );
+      }
+    },
+    [getExpensesList]
+  );
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Create Expense                                                         */
+  /* ---------------------------------------------------------------------- */
+
+  const handleCreateExpense = async (payload) => {
+    try {
+      setSubmitting(true);
+
+      const res = await expensesApi?.createExpenses(payload);
+
+      if (res?.success) {
+        await getExpensesList();
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.error(
+        'Failed to create expense:',
+        error?.message || error
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Date Filter                                                            */
+  /* ---------------------------------------------------------------------- */
+
+  const handleFilterChange = ({ startDate, endDate }) => {
+    setSelectedDateRange({
+      startDate,
+      endDate,
+    });
+
+    /*
+      Your existing API currently exposes getAllExpensesByUserId().
+      Therefore we keep the date filter state ready here without
+      inventing a new API method.
+
+      When your backend supports:
+      getExpensesByRange(startDate, endDate)
+
+      this handler can call that endpoint.
+    */
+  };
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Menu                                                                   */
+  /* ---------------------------------------------------------------------- */
+
+  const handleMenuOpen = (event, expense) => {
+    setMenuAnchor(event.currentTarget);
+    setSelectedExpense(expense);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+    setSelectedExpense(null);
+  };
+
+
+  /* ---------------------------------------------------------------------- */
+  /* Render                                                                 */
+  /* ---------------------------------------------------------------------- */
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header & Controls */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" fontWeight="bold">
-          My Accounts - Monthly Expenses - {getFormatedMonth[new Date().getMonth()]}
-        </Typography>
+    <Container
+      maxWidth="xl"
+      className="finora-expenses-page"
+    >
 
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <ToggleButtonGroup
-            value={viewMode}
-            exclusive
-            onChange={(e, val) => val && setViewMode(val)}
-            size="small"
+      {/* ---------------------------------------------------------------- */}
+      {/* Page Header                                                       */}
+      {/* ---------------------------------------------------------------- */}
+
+      <Box className="finora-expenses-header">
+
+        <Box>
+          <Typography
+            variant="h4"
+            className="finora-expenses-title"
           >
-            <ToggleButton value="table">
-              <ViewList sx={{ mr: 0.5 }} /> Table
-            </ToggleButton>
-            <ToggleButton value="calendar">
-              <CalendarMonth sx={{ mr: 0.5 }} /> Calendar
-            </ToggleButton>
-          </ToggleButtonGroup>
+            Expenses
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+          >
+            Track your spending, payments and upcoming
+            expenses.
+          </Typography>
+        </Box>
+
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setModalOpen(true)}
+          className="finora-expenses-add-button"
+        >
+          Add Expense
+        </Button>
+
+      </Box>
+
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Summary Cards                                                     */}
+      {/* ---------------------------------------------------------------- */}
+
+      {/* <Grid
+        container
+        spacing={2}
+        className="finora-expense-summary-grid"
+      >
+
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard
+            title="Total Expenses"
+            value={formatCurrency(
+              data.summary.totalAmount
+            )}
+            subtitle={`${statistics.total} total expenses`}
+            icon={<ReceiptLong />}
+            className="summary-total"
+          />
+        </Grid>
+
+
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard
+            title="Paid Amount"
+            value={formatCurrency(
+              data.summary.paidAmount
+            )}
+            subtitle={`${statistics.completed} completed`}
+            icon={<CheckCircleOutlined />}
+            className="summary-paid"
+          />
+        </Grid>
+
+
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard
+            title="Outstanding"
+            value={formatCurrency(
+              data.summary.balanceAmount
+            )}
+            subtitle={`${statistics.pending} pending • ${statistics.overdue} overdue`}
+            icon={<AccountBalanceWallet />}
+            className="summary-balance"
+          />
+        </Grid>
+
+
+        <Grid item xs={12} sm={6} lg={3}>
+          <SummaryCard
+            title="Payment Progress"
+            value={
+              data.summary.totalAmount > 0
+                ? `${Math.round(
+                  (data.summary.paidAmount /
+                    data.summary.totalAmount) *
+                  100
+                )}%`
+                : '0%'
+            }
+            subtitle="Expenses completed"
+            icon={<TrendingUp />}
+            className="summary-progress"
+          />
+        </Grid>
+
+      </Grid> */}
+
+      <Grid
+        container
+        spacing={2}
+        className="finora-expense-summary-grid"
+      >
+        <ExpenseSummaryCards
+          totalExpenses={data.summary.totalAmount}
+          paidAmount={data.summary.paidAmount}
+          outstandingAmount={data.summary.balanceAmount}
+
+          totalExpensesCount={data?.expenses?.length || 0}
+          completedCount={statistics.completed}
+          pendingCount={statistics.pending}
+          overdueCount={statistics.overdue}
+
+          startDate={selectedDateRange?.startDate}
+          endDate={selectedDateRange?.endDate}
+        />
+      </Grid>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Expense Tracker                                                   */}
+      {/* ---------------------------------------------------------------- */}
+
+      <Card
+        elevation={0}
+        className="finora-expense-main-card"
+      >
+
+        {/* Toolbar */}
+
+        <Box className="finora-expense-toolbar">
+
+          <Box>
+            <Typography
+              variant="h6"
+              fontWeight={700}
+            >
+              Expense Tracker
+            </Typography>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >
+              {filteredExpenses.length} expense
+              {filteredExpenses.length !== 1 ? 's' : ''}
+              {' '}shown
+            </Typography>
+          </Box>
+
+
+          <Box className="finora-expense-view-controls">
+
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              onChange={(event, value) => {
+                if (value) {
+                  setViewMode(value);
+                }
+              }}
+              size="small"
+              className="finora-expense-view-toggle"
+            >
+
+              <ToggleButton value="table">
+                <ViewList fontSize="small" />
+                <span>Table</span>
+              </ToggleButton>
+
+              <ToggleButton value="calendar">
+                <CalendarMonth fontSize="small" />
+                <span>Calendar</span>
+              </ToggleButton>
+
+            </ToggleButtonGroup>
+
+          </Box>
+
+        </Box>
+
+
+        {/* Filters */}
+
+        <Box className="finora-expense-filters">
+
+          <TextField
+            size="small"
+            placeholder="Search expenses..."
+            value={searchTerm}
+            onChange={(event) =>
+              setSearchTerm(event.target.value)
+            }
+            className="finora-expense-search"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+
+          <Select
+            size="small"
+            value={statusFilter}
+            onChange={(event) =>
+              setStatusFilter(event.target.value)
+            }
+            className="finora-expense-status-filter"
+          >
+            {STATUS_OPTIONS.map((status) => (
+              <MenuItem
+                key={status}
+                value={status}
+              >
+                {status === 'All'
+                  ? 'All Status'
+                  : status}
+              </MenuItem>
+            ))}
+          </Select>
+
+
+          <Box className="finora-expense-date-filter">
+            <DateRangeFilter
+              onFilterChange={handleFilterChange}
+            />
+          </Box>
+
 
           <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setModalOpen(true)}
+            variant="outlined"
+            startIcon={<Refresh />}
+            onClick={getExpensesList}
+            disabled={loading}
+            className="finora-refresh-button"
           >
-            Add Expense
+            Refresh
           </Button>
+
         </Box>
-      </Box>
 
-      {/* Summary Cards */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={4}>
-          <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                Total Expenses
-              </Typography>
-              <Typography variant="h5" fontWeight="bold">
-                ₹{data.summary.totalAmount.toLocaleString('en-IN')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Card variant="outlined" sx={{ borderColor: 'success.main', bgcolor: '#f0fdf4' }}>
-            <CardContent>
-              <Typography color="success.dark" variant="body2" fontWeight="500">
-                Paid Amount
-              </Typography>
-              <Typography variant="h5" fontWeight="bold" color="success.main">
-                ₹{data.summary.paidAmount.toLocaleString('en-IN')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Card variant="outlined" sx={{ borderColor: 'error.main', bgcolor: '#fef2f2' }}>
-            <CardContent>
-              <Typography color="error.dark" variant="body2" fontWeight="500">
-                Balance Amount
-              </Typography>
-              <Typography variant="h5" fontWeight="bold" color="error.main">
-                ₹{data.summary.balanceAmount.toLocaleString('en-IN')}
-              </Typography>
-              <Typography fontWeight="bold" color="error.main">
-                {/* ₹{data.summary.balanceAmount.toLocaleString('en-IN')} */}
-                {earnAmountPerDay(data.summary.balanceAmount)}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography color="error.dark" variant="body2" fontWeight="500">
-                Active vs Closed
-              </Typography>
-              <Typography variant="h5" fontWeight="bold" color="error.main">
-                {activeExpenses} / {data?.expenses?.length}
-              </Typography>
-              <Typography fontWeight="bold" color="error.main">
-                {data?.expenses?.length - activeExpenses} expenses fully paid off
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" fontWeight="bold">
-          Expense Tracker
-        </Typography>
 
-        {/* Date Range Filter */}
-        <DateRangeFilter onFilterChange={handleFilterChange} />
-      </Box>
+        {/* ---------------------------------------------------------------- */}
+        {/* Table View                                                       */}
+        {/* ---------------------------------------------------------------- */}
 
-      {/* Table View */}
-      {viewMode === 'table' ? (
-        <TableContainer component={Paper} elevation={1} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead sx={{ backgroundColor: 'action.hover' }}>
-              <TableRow>
-                <TableCell fontWeight="bold">Sl</TableCell>
-                <TableCell fontWeight="bold">Date</TableCell>
-                <TableCell fontWeight="bold">Related</TableCell>
-                <TableCell fontWeight="bold" align="right">
-                  Amount
-                </TableCell>
-                <TableCell fontWeight="bold" align="center">
-                  Status
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.expenses.map((row, index) => (
-                <TableRow key={row._id} hover>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{
-                    new Date(row.dueDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })
-                  }</TableCell>
-                  <TableCell fontWeight="500">{row.related}</TableCell>
-                  <TableCell align="right">₹{row.amount.toLocaleString('en-IN')}</TableCell>
-                  <TableCell align="center">
-                    <StatusChip
-                      status={row.status}
-                      onChange={(newStatus) => handleStatusChange(row._id, newStatus)}
-                    />
+        {viewMode === 'table' && (
+
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            className="finora-expense-table-container"
+          >
+
+            <Table
+              stickyHeader
+              className="finora-expense-table"
+            >
+
+              <TableHead>
+
+                <TableRow>
+
+                  <TableCell width={60}>
+                    #
                   </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        /* Simple Calendar View Grid */
-        <Paper sx={{ p: 3, borderRadius: 2 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            March 2026 Expense Calendar
-          </Typography>
-          <Grid container spacing={1}>
-            {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-              const dayStr = `2026-03-${String(day).padStart(2, '0')}`;
-              const dayExpenses = data.expenses.filter((e) => e.dueDate === dayStr);
 
-              return (
-                <Grid item xs={12} sm={6} md={1.7} key={day}>
-                  <Box
-                    sx={{
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderRadius: 1,
-                      p: 1,
-                      minHeight: 90,
-                      bgcolor: dayExpenses.length ? 'action.hover' : 'background.paper',
-                    }}
-                  >
-                    <Typography variant="caption" fontWeight="bold" color="text.secondary">
-                      {day}
-                    </Typography>
-                    {dayExpenses.map((exp) => (
-                      <Box
-                        key={exp.id}
-                        sx={{
-                          fontSize: '0.7rem',
-                          p: 0.5,
-                          mt: 0.5,
-                          borderRadius: 0.5,
-                          bgcolor:
-                            exp.status === 'Completed'
-                              ? '#dcfce7'
-                              : exp.status === 'Overdue'
-                                ? '#fee2e2'
-                                : '#fef3c7',
-                          color:
-                            exp.status === 'Completed'
-                              ? '#166534'
-                              : exp.status === 'Overdue'
-                                ? '#991b1b'
-                                : '#92400e',
-                        }}
-                      >
-                        {exp.related}: ₹{exp.amount}
+                  <TableCell>
+                    Date
+                  </TableCell>
+
+                  <TableCell>
+                    Expense
+                  </TableCell>
+
+                  <TableCell align="right">
+                    Amount
+                  </TableCell>
+
+                  <TableCell align="center">
+                    Status
+                  </TableCell>
+
+                  <TableCell
+                    align="right"
+                    width={60}
+                  />
+
+                </TableRow>
+
+              </TableHead>
+
+
+              <TableBody>
+
+                {loading ? (
+                  <ExpenseTableSkeleton />
+                ) : filteredExpenses.length === 0 ? (
+
+                  <TableRow>
+
+                    <TableCell
+                      colSpan={6}
+                      align="center"
+                    >
+
+                      <Box className="finora-expense-empty">
+
+                        <ReceiptLong />
+
+                        <Typography
+                          variant="h6"
+                          fontWeight={600}
+                        >
+                          No expenses found
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                        >
+                          Try changing your filters or
+                          add a new expense.
+                        </Typography>
+
+                        <Button
+                          variant="contained"
+                          startIcon={<AddIcon />}
+                          onClick={() =>
+                            setModalOpen(true)
+                          }
+                        >
+                          Add Expense
+                        </Button>
+
                       </Box>
-                    ))}
-                  </Box>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Paper>
-      )}
+
+                    </TableCell>
+
+                  </TableRow>
+
+                ) : (
+
+                  filteredExpenses.map(
+                    (row, index) => (
+
+                      <TableRow
+                        key={row?._id || index}
+                        hover
+                        className="finora-expense-row"
+                      >
+
+                        <TableCell>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                          >
+                            {index + 1}
+                          </Typography>
+                        </TableCell>
+
+
+                        <TableCell>
+                          <Typography
+                            variant="body2"
+                            fontWeight={500}
+                          >
+                            {formatDate(
+                              row?.dueDate
+                            )}
+                          </Typography>
+                        </TableCell>
+
+
+                        <TableCell>
+
+                          <Box>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                            >
+                              {row?.related ||
+                                'Unnamed expense'}
+                            </Typography>
+
+                            {row?.category && (
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                {row.category}
+                              </Typography>
+                            )}
+                          </Box>
+
+                        </TableCell>
+
+
+                        <TableCell align="right">
+
+                          <Typography
+                            variant="body2"
+                            fontWeight={700}
+                            className="finora-expense-amount"
+                          >
+                            {formatCurrency(
+                              row?.amount
+                            )}
+                          </Typography>
+
+                        </TableCell>
+
+
+                        <TableCell align="center">
+
+                          <StatusChip
+                            status={
+                              row?.status ||
+                              'Pending'
+                            }
+                            onChange={(newStatus) =>
+                              handleStatusChange(
+                                row?._id,
+                                newStatus
+                              )
+                            }
+                          />
+
+                        </TableCell>
+
+
+                        <TableCell align="right">
+
+                          <Button
+                            size="small"
+                            onClick={(event) =>
+                              handleMenuOpen(
+                                event,
+                                row
+                              )
+                            }
+                            className="finora-expense-more-button"
+                          >
+                            <MoreVert
+                              fontSize="small"
+                            />
+                          </Button>
+
+                        </TableCell>
+
+                      </TableRow>
+
+                    )
+                  )
+
+                )}
+
+              </TableBody>
+
+            </Table>
+
+          </TableContainer>
+
+        )}
+
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Calendar View                                                    */}
+        {/* ---------------------------------------------------------------- */}
+
+        {viewMode === 'calendar' && (
+          <ExpenseCalendar
+            expenses={filteredExpenses}
+            onExpenseClick={(expense) => {
+              console.log('Selected expense:', expense);
+
+              // Later:
+              // setSelectedExpense(expense);
+              // setExpenseDetailsOpen(true);
+            }}
+            onDateClick={(date) => {
+              console.log('Selected date:', date);
+
+              // Later we can open AddExpenseModal
+              // with this date pre-filled.
+            }}
+          />
+        )}
+
+      </Card>
+
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Expense Context Menu                                              */}
+      {/* ---------------------------------------------------------------- */}
+
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+        PaperProps={{
+          elevation: 4,
+          sx: {
+            minWidth: 180,
+            borderRadius: 2,
+          },
+        }}
+      >
+
+        <MenuItem
+          onClick={handleMenuClose}
+        >
+          <ListItemIcon>
+            <ReceiptLong fontSize="small" />
+          </ListItemIcon>
+
+          <ListItemText>
+            View Expense
+          </ListItemText>
+        </MenuItem>
+
+        <MenuItem
+          onClick={handleMenuClose}
+        >
+          <ListItemIcon>
+            <AccountBalanceWallet fontSize="small" />
+          </ListItemIcon>
+
+          <ListItemText>
+            Edit Expense
+          </ListItemText>
+        </MenuItem>
+
+      </Menu>
+
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Add Expense Modal                                                 */}
+      {/* ---------------------------------------------------------------- */}
 
       <AddExpenseModal
         open={modalOpen}
@@ -423,6 +1076,7 @@ export default function MonthlyExpenses() {
         onSubmit={handleCreateExpense}
         loading={submitting}
       />
+
     </Container>
   );
 }

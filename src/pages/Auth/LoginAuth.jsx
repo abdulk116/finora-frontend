@@ -1,235 +1,612 @@
-import { useActionState, useState } from 'react';
 import {
+  useActionState,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  Alert,
   Box,
+  Button,
   Card,
   CardContent,
-  TextField,
-  Button,
-  Typography,
+  Checkbox,
+  CircularProgress,
+  Divider,
+  FormControlLabel,
   IconButton,
   InputAdornment,
-  Checkbox,
-  FormControlLabel,
   Link,
-  Alert,
-  CircularProgress,
-} from '@mui/material';
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+
 import {
-  Visibility,
-  VisibilityOff,
-  AccountBalanceWallet,
-  Lock,
-  Email,
-} from '@mui/icons-material';
-import './Login.css';
-import { useNavigate } from 'react-router';
-import authApi from '../../api/authApi';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../../redux/slices/authSlice';
+  AccountBalanceWalletRounded,
+  ArrowBackRounded,
+  ArrowForwardRounded,
+  CheckCircleRounded,
+  EmailRounded,
+  LockRounded,
+  VisibilityRounded,
+  VisibilityOffRounded,
+  TrendingUpRounded,
+  CreditCardRounded,
+} from "@mui/icons-material";
 
-// ----------------------------------------------------------------------
-// 1. Server/Async Action Handler
-// ----------------------------------------------------------------------
+import { useNavigate } from "react-router";
+
+import { useDispatch } from "react-redux";
+
+import authApi from "../../api/authApi";
+import { setCredentials } from "../../redux/slices/authSlice";
+
+import "./Login.css";
+
+// ============================================================
+// LOGIN ACTION
+// ============================================================
+
 async function handleLoginAction(previousState, formData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const rememberMe = formData.get('rememberMe') === 'on';
+  const email = formData.get("email")?.trim();
+  const password = formData.get("password");
+  const rememberMe = formData.get("rememberMe") === "on";
 
-  // Client validation within action
+  // ----------------------------------------------------------
+  // Client validation
+  // ----------------------------------------------------------
+
   if (!email || !password) {
     return {
       success: false,
-      error: 'Please fill in both email and password.',
+      data: null,
+      error: "Please enter your email and password.",
+      message: null,
+    };
+  }
+
+  if (!email.includes("@")) {
+    return {
+      success: false,
+      data: null,
+      error: "Please enter a valid email address.",
+      message: null,
     };
   }
 
   try {
-    // TODO: Replace this timeout with your actual backend API call
-    // e.g., const res = await fetch('/api/login', { method: 'POST', body: formData });
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
-    const res = await authApi?.login({ email, password });
+    const response = await authApi.login({
+      email,
+      password,
+      rememberMe,
+    });
 
-    if (res?.success && res?.data?._id) {
-      // Success response
-      console.log('Finora Login Successful:', { email, rememberMe });
+    if (response?.success && response?.data?._id) {
       return {
         success: true,
-        data: res?.data,
+        data: response.data,
         error: null,
-        message: 'Logged in successfully! Redirecting...',
-      };
-    } else {
-      return {
-        success: false,
-        error: res?.message || 'Invalid email or password. Please try again.',
+        message: "Login successful. Redirecting...",
       };
     }
 
+    return {
+      success: false,
+      data: null,
+      error:
+        response?.message ||
+        "Invalid email or password. Please try again.",
+      message: null,
+    };
   } catch (error) {
     return {
       success: false,
-      error: error?.message || 'Something went wrong. Please try again later.',
+      data: null,
+      error:
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to connect to the server. Please try again.",
+      message: null,
     };
   }
 }
 
-// ----------------------------------------------------------------------
-// 2. Main Login Component
-// ----------------------------------------------------------------------
+// ============================================================
+// LOGIN COMPONENT
+// ============================================================
+
 const LoginAuth = () => {
-  // Toggle password visibility (UI state stay local to React)
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // React 19 useActionState Hook
-  // [state, formAction, isPending]
-  const [state, formAction, isPending] = useActionState(handleLoginAction, {
-    success: false,
-    error: null,
-    message: null,
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleTogglePassword = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const [state, formAction, isPending] = useActionState(
+    handleLoginAction,
+    {
+      success: false,
+      data: null,
+      error: null,
+      message: null,
+    }
+  );
 
-  if (state?.success && state?.data) {
+  // ==========================================================
+  // REDIRECT AFTER SUCCESS
+  // ==========================================================
+
+  useEffect(() => {
+    if (!state?.success || !state?.data) {
+      return;
+    }
+
     dispatch(
       setCredentials({
-        user: state?.data,
-        token: state?.data?.token,
+        user: state.data,
+        token: state.data.token,
       })
     );
-    navigate("/dashboard")
-  }
+
+    navigate("/dashboard", {
+      replace: true,
+    });
+  }, [
+    state?.success,
+    state?.data,
+    dispatch,
+    navigate,
+  ]);
+
+  // ==========================================================
+  // PASSWORD TOGGLE
+  // ==========================================================
+
+  const handleTogglePassword = () => {
+    setShowPassword((current) => !current);
+  };
+
+  // ==========================================================
+  // BACK TO LANDING
+  // ==========================================================
+
+  const handleBackToHome = () => {
+    navigate("/");
+  };
+
+  // ==========================================================
+  // RENDER
+  // ==========================================================
 
   return (
-    <div className="finora-login-container">
-      <Card className="finora-login-card" elevation={4}>
-        <CardContent sx={{ p: 4 }}>
-          {/* Brand Logo & Header */}
-          <Box className="finora-brand-header">
-            <Box className="finora-logo-badge">
-              <AccountBalanceWallet fontSize="large" color="primary" />
-            </Box>
-            <Typography variant="h4" component="h1" fontWeight="700" className="finora-title">
-              Finora
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Track your loans, EMIs, and income effortlessly.
-            </Typography>
-          </Box>
+    <Box className="finora-login-page">
 
-          {/* Alert Feedback Messages */}
-          {state?.error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {state.error}
-            </Alert>
-          )}
+      {/* ======================================================
+          BACKGROUND DECORATION
+      ====================================================== */}
 
-          {state?.success && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              {state.message}
-            </Alert>
-          )}
+      <Box className="login-background-shape login-shape-one" />
+      <Box className="login-background-shape login-shape-two" />
 
-          {/* Form bounded directly to useActionState action */}
-          <Box component="form" action={formAction} noValidate>
-            <TextField
-              fullWidth
-              margin="normal"
-              id="email"
-              name="email"
-              label="Email Address"
-              type="email"
-              disabled={isPending}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Email color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+      {/* ======================================================
+          PAGE
+      ====================================================== */}
 
-            <TextField
-              fullWidth
-              margin="normal"
-              id="password"
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              disabled={isPending}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock color="action" />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleTogglePassword}
-                      edge="end"
-                      disabled={isPending}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+      <Box className="finora-login-wrapper">
 
-            {/* Remember Me & Forgot Password */}
-            <Box className="finora-form-options">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="rememberMe"
-                    color="primary"
-                    disabled={isPending}
-                  />
-                }
-                label="Remember me"
-              />
-              <Link href="#" variant="body2" underline="hover">
-                Forgot password?
-              </Link>
-            </Box>
+        {/* ====================================================
+            BACK TO HOME
+        ==================================================== */}
 
-            {/* Submit Button showing pending state automatically */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              disabled={isPending}
-              className="finora-submit-btn"
-              sx={{ mt: 2, mb: 2, py: 1.2, fontWeight: 600 }}
-            >
-              {isPending ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Log In to Finora'
-              )}
-            </Button>
+        <Button
+          className="login-back-button"
+          startIcon={<ArrowBackRounded />}
+          onClick={handleBackToHome}
+        >
+          Back to Finora
+        </Button>
 
-            {/* Register Link */}
-            <Box textAlign="center" mt={2}>
-              <Typography variant="body2" color="text.secondary">
-                Don't have an account?{' '}
-                <Link href="#" underline="hover" fontWeight="600">
-                  Sign Up
-                </Link>
+        {/* ====================================================
+            AUTH CARD
+        ==================================================== */}
+
+        <Card
+          className="finora-login-card"
+          elevation={0}
+        >
+
+          {/* ==================================================
+              LEFT BRAND PANEL
+          ================================================== */}
+
+          <Box className="login-brand-panel">
+
+            <Box className="login-brand-content">
+
+              {/* Logo */}
+
+              <Box className="login-brand-logo">
+                <AccountBalanceWalletRounded />
+              </Box>
+
+              <Typography
+                component="h1"
+                className="login-brand-name"
+              >
+                Finora
               </Typography>
+
+              <Typography className="login-brand-tagline">
+                Take control of your money.
+              </Typography>
+
+              <Typography className="login-brand-description">
+                Manage your income, expenses, loans and EMIs
+                from one simple financial workspace.
+              </Typography>
+
+              {/* Financial preview */}
+
+              <Box className="login-finance-preview">
+
+                <Box className="login-preview-header">
+                  <Typography>
+                    Financial overview
+                  </Typography>
+
+                  <span>
+                    This month
+                  </span>
+                </Box>
+
+                <Typography className="login-preview-balance">
+                  ₹84,250
+                </Typography>
+
+                <Typography className="login-preview-label">
+                  Total balance
+                </Typography>
+
+                <Box className="login-preview-chart">
+                  <span style={{ height: "38%" }} />
+                  <span style={{ height: "52%" }} />
+                  <span style={{ height: "45%" }} />
+                  <span style={{ height: "68%" }} />
+                  <span style={{ height: "58%" }} />
+                  <span style={{ height: "82%" }} />
+                  <span style={{ height: "72%" }} />
+                </Box>
+
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  className="login-preview-stats"
+                >
+                  <Box>
+                    <TrendingUpRounded />
+
+                    <Box>
+                      <Typography>
+                        Income
+                      </Typography>
+
+                      <strong>
+                        ₹52,800
+                      </strong>
+                    </Box>
+                  </Box>
+
+                  <Box>
+                    <CreditCardRounded />
+
+                    <Box>
+                      <Typography>
+                        EMI
+                      </Typography>
+
+                      <strong>
+                        ₹8,450
+                      </strong>
+                    </Box>
+                  </Box>
+                </Stack>
+
+              </Box>
+
+              {/* Benefits */}
+
+              <Stack
+                spacing={1.5}
+                className="login-benefits"
+              >
+                <Box>
+                  <CheckCircleRounded />
+                  <Typography>
+                    Track loans and EMIs
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <CheckCircleRounded />
+                  <Typography>
+                    Understand your spending
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <CheckCircleRounded />
+                  <Typography>
+                    Monitor your financial growth
+                  </Typography>
+                </Box>
+              </Stack>
+
             </Box>
+
           </Box>
-        </CardContent>
-      </Card>
-    </div>
+
+          {/* ==================================================
+              RIGHT LOGIN PANEL
+          ================================================== */}
+
+          <CardContent className="login-form-panel">
+
+            <Box className="login-form-wrapper">
+
+              {/* Mobile logo */}
+
+              <Box className="mobile-login-brand">
+
+                <Box className="mobile-login-logo">
+                  <AccountBalanceWalletRounded />
+                </Box>
+
+                <Typography>
+                  Finora
+                </Typography>
+
+              </Box>
+
+              {/* Header */}
+
+              <Box className="login-form-header">
+
+                <Typography
+                  component="h2"
+                  className="login-form-title"
+                >
+                  Welcome back
+                </Typography>
+
+                <Typography className="login-form-description">
+                  Sign in to continue managing your finances.
+                </Typography>
+
+              </Box>
+
+              {/* =================================================
+                  ALERTS
+              ================================================= */}
+
+              {state?.error && (
+                <Alert
+                  severity="error"
+                  className="login-alert"
+                >
+                  {state.error}
+                </Alert>
+              )}
+
+              {state?.success && state?.message && (
+                <Alert
+                  severity="success"
+                  className="login-alert"
+                >
+                  {state.message}
+                </Alert>
+              )}
+
+              {/* =================================================
+                  FORM
+              ================================================= */}
+
+              <Box
+                component="form"
+                action={formAction}
+                noValidate
+                className="login-form"
+              >
+
+                {/* Email */}
+
+                <TextField
+                  fullWidth
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email address"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  disabled={isPending}
+                  required
+                  className="login-field"
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailRounded />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+
+                {/* Password */}
+
+                <TextField
+                  fullWidth
+                  id="password"
+                  name="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
+                  autoComplete="current-password"
+                  disabled={isPending}
+                  required
+                  className="login-field"
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockRounded />
+                        </InputAdornment>
+                      ),
+
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            type="button"
+                            aria-label={
+                              showPassword
+                                ? "Hide password"
+                                : "Show password"
+                            }
+                            onClick={
+                              handleTogglePassword
+                            }
+                            disabled={isPending}
+                            edge="end"
+                          >
+                            {showPassword ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+
+                {/* Remember / Forgot */}
+
+                <Box className="login-form-options">
+
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="rememberMe"
+                        value="on"
+                        disabled={isPending}
+                        className="login-checkbox"
+                      />
+                    }
+                    label="Remember me"
+                  />
+
+                  <Link
+                    component="button"
+                    type="button"
+                    underline="hover"
+                    className="forgot-password-link"
+                    onClick={() => {
+                      // Connect your forgot-password flow here.
+                    }}
+                  >
+                    Forgot password?
+                  </Link>
+
+                </Box>
+
+                {/* Submit */}
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isPending}
+                  className="login-submit-button"
+                  endIcon={
+                    !isPending && (
+                      <ArrowForwardRounded />
+                    )
+                  }
+                >
+                  {isPending ? (
+                    <>
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                      />
+
+                      <span className="login-loading-text">
+                        Signing in...
+                      </span>
+                    </>
+                  ) : (
+                    "Sign in to Finora"
+                  )}
+                </Button>
+
+              </Box>
+
+              {/* =================================================
+                  DIVIDER
+              ================================================= */}
+
+              <Box className="login-divider">
+                <Divider />
+
+                <span>
+                  New to Finora?
+                </span>
+
+                <Divider />
+              </Box>
+
+              {/* Signup */}
+
+              <Button
+                fullWidth
+                variant="outlined"
+                className="login-signup-button"
+                onClick={() => {
+                  // Connect your registration route here.
+                }}
+              >
+                Create an account
+              </Button>
+
+              {/* Security note */}
+
+              <Typography className="login-security-note">
+                Your financial information stays private
+                and secure.
+              </Typography>
+
+            </Box>
+
+          </CardContent>
+
+        </Card>
+
+        {/* ====================================================
+            FOOTER
+        ==================================================== */}
+
+        <Typography className="login-copyright">
+          © {new Date().getFullYear()} Finora ·
+          Personal finance made simpler.
+        </Typography>
+
+      </Box>
+    </Box>
   );
-}
+};
 
 export default LoginAuth;

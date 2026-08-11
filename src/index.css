@@ -1,12 +1,48 @@
 * {
- margin: unset;
- font-family: Roboto, Helvetica, Arial, sans-serif;
-}
-body {
-  height: 100dvh;
-  width: 100dvw;
+  margin: unset;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
 #root {
   height: 100%;
+  --finora-primary: #4f46e5;
+  --finora-primary-dark: #4338ca;
+  --finora-primary-light: #eef2ff;
+  --finora-primary-soft: #f5f7ff;
+
+  --finora-text-primary: #0f172a;
+  --finora-text-secondary: #64748b;
+  --finora-text-muted: #94a3b8;
+
+  --finora-background: #f8fafc;
+  --finora-surface: #ffffff;
+
+  --finora-border: #e2e8f0;
+  --finora-border-light: #f1f5f9;
+
+  --finora-danger: #ef4444;
+  --finora-danger-light: #fef2f2;
+
+  --finora-success: #16a34a;
+
+  --finora-sidebar-width: 260px;
+  --finora-navbar-height: 64px;
+
+  --finora-radius-sm: 8px;
+  --finora-radius-md: 10px;
+  --finora-radius-lg: 14px;
+
+  --finora-shadow-sm:
+    0 2px 8px rgba(15, 23, 42, 0.025);
+
+  --finora-shadow-md:
+    0 8px 24px rgba(15, 23, 42, 0.05);
+
+  --finora-shadow-lg:
+    0 15px 40px rgba(15, 23, 42, 0.12);
+}
+
+body {
+  height: 100dvh;
+  width: 100dvw;
 }

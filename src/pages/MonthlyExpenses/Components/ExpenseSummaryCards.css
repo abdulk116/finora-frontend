@@ -1,0 +1,536 @@
+/* =========================================================
+   FINORA EXPENSE SUMMARY
+   ========================================================= */
+
+.finora-expense-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.expense-summary-card {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 190px;
+
+  border: 1px solid #e2e8f0 !important;
+
+  border-radius: 18px !important;
+
+  background: #ffffff !important;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease !important;
+}
+
+
+/* Top accent */
+
+.expense-summary-card::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 4px;
+
+  opacity: 0.9;
+}
+
+
+/* Hover */
+
+.expense-summary-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+
+/* =========================================================
+   CARD TYPES
+   ========================================================= */
+
+.expense-summary-card.total::before {
+  background: #2563eb;
+}
+
+.expense-summary-card.paid::before {
+  background: #16a34a;
+}
+
+.expense-summary-card.outstanding {
+  border-color: #fecaca !important;
+
+  background:
+    linear-gradient(145deg,
+      #ffffff 0%,
+      #fffafa 100%) !important;
+}
+
+.expense-summary-card.outstanding::before {
+  background: #ef4444;
+}
+
+.expense-summary-card.progress::before {
+  background: #0d9488;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.expense-summary-content {
+  padding: 22px !important;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.expense-card-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.expense-card-title {
+  color: #64748b;
+
+  font-size: 0.82rem !important;
+
+  font-weight: 600 !important;
+
+  margin-bottom: 8px !important;
+}
+
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+.expense-card-value {
+  color: #0f172a;
+
+  font-size: clamp(1.5rem,
+      2vw,
+      2rem) !important;
+
+  font-weight: 800 !important;
+
+  line-height: 1.15 !important;
+
+  letter-spacing: -0.5px;
+}
+
+
+/* Outstanding value */
+
+.expense-summary-card.outstanding .expense-card-value {
+  color: #dc2626;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.expense-card-icon {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  transition: transform 0.2s ease;
+}
+
+.expense-summary-card:hover .expense-card-icon {
+  transform: scale(1.05);
+}
+
+
+/* Icon colors */
+
+.expense-card-icon.blue {
+  color: #2563eb;
+
+  background: #eff6ff;
+}
+
+.expense-card-icon.green {
+  color: #16a34a;
+
+  background: #f0fdf4;
+}
+
+.expense-card-icon.red {
+  color: #dc2626;
+
+  background: #fef2f2;
+}
+
+.expense-card-icon.teal {
+  color: #0d9488;
+
+  background: #f0fdfa;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.expense-card-subtitle {
+  margin-top: 14px !important;
+
+  color: #475569;
+
+  font-size: 0.82rem !important;
+
+  font-weight: 500 !important;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.expense-card-footer {
+  margin-top: 12px !important;
+
+  color: #94a3b8;
+
+  font-size: 0.72rem !important;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.expense-progress-bar {
+  height: 7px !important;
+
+  margin-top: 16px;
+
+  border-radius: 20px !important;
+
+  background: #e2e8f0 !important;
+}
+
+.expense-progress-bar .MuiLinearProgress-bar {
+  border-radius: 20px;
+}
+
+
+/* Paid progress */
+
+.expense-summary-card.paid .expense-progress-bar .MuiLinearProgress-bar {
+  background: #16a34a !important;
+}
+
+
+/* =========================================================
+   OUTSTANDING CARD
+   ========================================================= */
+
+.pending-info {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: #fff1f2;
+
+  border: 1px solid #ffe4e6;
+}
+
+
+.pending-main {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+.pending-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  color: #dc2626;
+
+  background: #ffffff;
+}
+
+
+.pending-label {
+  color: #9f1239;
+
+  font-size: 0.68rem !important;
+
+  font-weight: 600 !important;
+}
+
+
+.pending-value {
+  margin-top: 2px !important;
+
+  color: #be123c;
+
+  font-size: 1rem !important;
+
+  font-weight: 800 !important;
+}
+
+
+.pending-value span {
+  margin-left: 3px;
+
+  color: #9f1239;
+
+  font-size: 0.68rem;
+
+  font-weight: 600;
+}
+
+
+.pending-days {
+  flex-shrink: 0;
+
+  color: #9f1239;
+
+  font-size: 0.68rem !important;
+
+  font-weight: 600 !important;
+
+  text-align: right;
+}
+
+
+/* =========================================================
+   OUTSTANDING PROGRESS
+   ========================================================= */
+
+.pending-progress {
+  margin-top: 14px;
+}
+
+
+.pending-progress-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 7px;
+}
+
+
+.pending-progress-header>* {
+  color: #64748b;
+
+  font-size: 0.7rem !important;
+
+  font-weight: 600 !important;
+}
+
+
+.outstanding-progress .MuiLinearProgress-bar {
+  background: #ef4444 !important;
+}
+
+
+.overdue-text {
+  display: flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  color: #dc2626 !important;
+}
+
+
+/* =========================================================
+   PROGRESS CARD
+   ========================================================= */
+
+.progress-card-footer {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 14px;
+
+  color: #64748b;
+
+  font-size: 0.75rem;
+}
+
+
+.progress-circle {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #f0fdfa;
+
+  border: 2px solid #99f6e4;
+}
+
+
+.progress-circle p {
+  color: #0d9488;
+
+  font-size: 0.62rem;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .finora-expense-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .finora-expense-summary {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+
+  .expense-summary-card {
+    min-height: auto;
+
+    border-radius: 16px !important;
+  }
+
+
+  .expense-summary-content {
+    padding: 18px !important;
+  }
+
+
+  .expense-card-value {
+    font-size: 1.65rem !important;
+  }
+
+
+  .expense-card-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+
+  .pending-info {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .pending-days {
+    text-align: left;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .expense-summary-content {
+    padding: 15px !important;
+  }
+
+
+  .expense-card-value {
+    font-size: 1.45rem !important;
+  }
+
+
+  .expense-card-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+}
