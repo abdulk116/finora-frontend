@@ -1,0 +1,591 @@
+/* =========================================================
+   FINORA - ADD EXPENSE MODAL
+   ========================================================= */
+
+.finora-expense-modal {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: min(92vw, 520px);
+
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.18);
+
+  outline: none;
+
+  animation: finoraModalEnter 0.2s ease-out;
+}
+
+
+/* =========================================================
+   MODAL ANIMATION
+   ========================================================= */
+
+@keyframes finoraModalEnter {
+
+  from {
+    opacity: 0;
+    transform:
+      translate(-50%, -48%) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%) scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.finora-expense-modal-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 20px 22px;
+
+  background:
+    linear-gradient(180deg,
+      #ffffff 0%,
+      #f8fafc 100%);
+}
+
+
+.finora-modal-title-wrapper {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+
+.finora-modal-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: #0d9488;
+
+  background: #f0fdfa;
+
+  border: 1px solid #ccfbf1;
+}
+
+
+.finora-modal-title {
+  color: #0f172a;
+
+  font-size: 1.1rem !important;
+
+  font-weight: 750 !important;
+
+  line-height: 1.3 !important;
+}
+
+
+.finora-modal-subtitle {
+  margin-top: 3px !important;
+
+  color: #64748b;
+
+  font-size: 0.75rem !important;
+
+  line-height: 1.4 !important;
+}
+
+
+.finora-modal-close {
+  flex-shrink: 0;
+
+  width: 36px;
+  height: 36px;
+
+  color: #64748b !important;
+
+  background: #f8fafc !important;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease !important;
+}
+
+
+.finora-modal-close:hover {
+  color: #0f172a !important;
+
+  background: #f1f5f9 !important;
+
+  transform: rotate(4deg);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.finora-expense-form {
+  display: flex;
+
+  flex-direction: column;
+
+  overflow-y: auto;
+
+  min-height: 0;
+}
+
+
+.finora-expense-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+
+.finora-expense-form::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.finora-expense-form::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+
+  border-radius: 20px;
+}
+
+
+/* =========================================================
+   FORM SECTION
+   ========================================================= */
+
+.finora-form-section {
+  padding: 20px 22px;
+}
+
+
+.finora-form-section-title {
+  color: #0f172a;
+
+  font-size: 0.9rem !important;
+
+  font-weight: 700 !important;
+}
+
+
+.finora-form-section-description {
+  margin-top: 3px !important;
+
+  margin-bottom: 14px !important;
+
+  color: #94a3b8;
+
+  font-size: 0.73rem !important;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.finora-expense-form .MuiTextField-root .MuiOutlinedInput-root {
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.finora-expense-form .MuiTextField-root .MuiOutlinedInput-root:hover {
+  background: #fafafa;
+}
+
+
+.finora-expense-form .MuiTextField-root .MuiOutlinedInput-root.Mui-focused {
+  box-shadow:
+    0 0 0 3px rgba(13, 148, 136, 0.08);
+}
+
+
+.finora-expense-form .MuiInputLabel-root {
+  color: #64748b;
+
+  font-size: 0.86rem;
+}
+
+
+.finora-expense-form .MuiFormHelperText-root {
+  margin-left: 3px;
+
+  margin-top: 5px;
+
+  font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   DATE STATUS
+   ========================================================= */
+
+.finora-date-status {
+  margin-top: 8px !important;
+
+  font-size: 0.68rem !important;
+
+  font-weight: 600 !important;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.finora-status-label {
+  color: #334155 !important;
+
+  font-size: 0.86rem !important;
+
+  font-weight: 700 !important;
+}
+
+
+.finora-status-description {
+  margin-top: 3px !important;
+
+  margin-bottom: 12px !important;
+
+  color: #94a3b8;
+
+  font-size: 0.72rem !important;
+}
+
+
+.finora-status-group {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+
+.finora-status-option {
+  position: relative;
+
+  margin: 0 !important;
+
+  padding: 10px 8px;
+
+  min-width: 0;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.finora-status-option:hover {
+  border-color: #cbd5e1;
+
+  transform: translateY(-1px);
+}
+
+
+.finora-status-option .MuiRadio-root {
+  padding: 4px;
+
+  margin-right: 3px;
+}
+
+
+.finora-status-option .MuiFormControlLabel-label {
+  min-width: 0;
+}
+
+
+.status-option-title {
+  color: #334155;
+
+  font-size: 0.76rem !important;
+
+  font-weight: 700 !important;
+}
+
+
+.status-option-description {
+  margin-top: 2px !important;
+
+  color: #94a3b8;
+
+  font-size: 0.61rem !important;
+
+  line-height: 1.3 !important;
+}
+
+
+/* Selected states */
+
+.finora-status-option.selected.pending {
+  border-color: #fbbf24;
+
+  background: #fffbeb;
+}
+
+
+.finora-status-option.selected.completed {
+  border-color: #86efac;
+
+  background: #f0fdf4;
+}
+
+
+.finora-status-option.selected.overdue {
+  border-color: #fca5a5;
+
+  background: #fef2f2;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.finora-expense-modal-footer {
+  position: sticky;
+
+  bottom: 0;
+
+  z-index: 2;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-top: 1px solid #e2e8f0;
+
+  backdrop-filter: blur(8px);
+}
+
+
+.finora-cancel-button {
+  min-width: 90px;
+
+  color: #475569 !important;
+
+  font-weight: 600 !important;
+
+  text-transform: none !important;
+
+  border-radius: 10px !important;
+}
+
+
+.finora-save-button {
+  min-width: 145px;
+
+  min-height: 42px;
+
+  border-radius: 10px !important;
+
+  text-transform: none !important;
+
+  font-weight: 700 !important;
+
+  background: #0d9488 !important;
+
+  box-shadow:
+    0 5px 14px rgba(13, 148, 136, 0.22) !important;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
+
+
+.finora-save-button:hover {
+  background: #0f766e !important;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 18px rgba(13, 148, 136, 0.28) !important;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .finora-expense-modal {
+    width: calc(100vw - 24px);
+
+    max-height: 92vh;
+
+    border-radius: 18px;
+  }
+
+
+  .finora-expense-modal-header {
+    padding: 17px 18px;
+  }
+
+
+  .finora-form-section {
+    padding: 18px;
+  }
+
+
+  .finora-expense-modal-footer {
+    padding: 12px 18px;
+  }
+
+
+  .finora-status-group {
+    grid-template-columns: 1fr;
+  }
+
+
+  .finora-status-option {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 52px;
+
+    padding: 8px 10px;
+  }
+
+
+  .finora-status-option .MuiRadio-root {
+    margin-right: 5px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .finora-expense-modal {
+    width: calc(100vw - 16px);
+
+    max-height: 94vh;
+
+    border-radius: 16px;
+  }
+
+
+  .finora-expense-modal-header {
+    padding: 15px;
+  }
+
+
+  .finora-form-section {
+    padding: 15px;
+  }
+
+
+  .finora-modal-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  .finora-modal-title {
+    font-size: 1rem !important;
+  }
+
+
+  .finora-modal-subtitle {
+    font-size: 0.68rem !important;
+  }
+
+
+  .finora-expense-modal-footer {
+    padding: 10px 15px;
+  }
+
+
+  .finora-cancel-button,
+  .finora-save-button {
+    flex: 1;
+
+    min-width: 0;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .finora-expense-modal,
+  .finora-status-option,
+  .finora-save-button,
+  .finora-modal-close {
+    animation: none !important;
+
+    transition: none !important;
+  }
+
+}

@@ -16,69 +16,28 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
+  Divider,
 } from '@mui/material';
+
 import {
   ArrowBack as ArrowBackIcon,
   AccountBalance as BankIcon,
   Save as SaveIcon,
+  AccountBalanceWallet as WalletIcon,
+  CalendarMonth as CalendarIcon,
+  Payments as PaymentIcon,
+  Percent as PercentIcon,
 } from '@mui/icons-material';
+
 import './AddLoan.css';
 import { useNavigate } from 'react-router';
 import loanApi from '../../../../api/loanApi';
 import { useSelector } from 'react-redux';
 import { generateEmiSchedule } from '../../../../utils/helper';
 
-// Predefined Loan Categories
-// const loanCategories = [
-//   { name: "Bank loan", value: 'bank_loan' },
-//   { name: "EMI", value: 'emi' },
-//   { name: "App loan", value: 'app_loan' },
-//   { name: "Personal Debt", value: 'personal_debt' }
-// ];
-
-// const generateEmiSchedule = (emiStartDate, emiAmt, tenure) => {
-//   if (!emiStartDate || !emiAmt || !tenure) return [];
-
-//   const schedule = [];
-//   const [year, month, day] = emiStartDate.split('-').map(Number);
-
-//   // Get today's date in "YYYY-MM-DD" format using local time
-//   const now = new Date();
-//   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-//   for (let i = 0; i < tenure; i++) {
-//     const targetDate = new Date(year, (month - 1) + i, day);
-
-//     const formattedYear = targetDate.getFullYear();
-//     const formattedMonth = String(targetDate.getMonth() + 1).padStart(2, '0');
-//     const formattedDay = String(targetDate.getDate()).padStart(2, '0');
-
-//     const dueDate = `${formattedYear}-${formattedMonth}-${formattedDay}`;
-
-//     // If due date is strictly before today, it's considered paid
-//     const isPast = dueDate < todayStr;
-
-//     const installment = {
-//       installmentNo: i + 1,
-//       dueDate,
-//       amount: Number(emiAmt),
-//       status: isPast ? 'paid' : 'pending',
-//     };
-
-//     // Optionally attach a paidDate for historical past payments
-//     if (isPast) {
-//       installment.paidDate = dueDate;
-//     }
-
-//     schedule.push(installment);
-//   }
-
-//   return schedule;
-// }
-
-
 export default function AddLoan() {
-  const user = useSelector((state) => state?.auth?.user)
+  const user = useSelector((state) => state?.auth?.user);
+
   const [formData, setFormData] = useState({
     title: '',
     lender: '',
@@ -95,9 +54,9 @@ export default function AddLoan() {
   const [loanType, setLoanType] = useState('loan');
   const [monthlyPayment, setMonthlyPayment] = useState("emi");
 
-  // Handle Form Inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -105,99 +64,75 @@ export default function AddLoan() {
   };
 
   const handlePaymentTypeChange = (e) => {
-    setMonthlyPayment(e?.target?.name)
-  }
-
-  // build payload for create loan
-  const buildLoanPayload = () => {
-  const {
-    title,
-    lender,
-    principal,
-    startDate,
-    tenureMonths,
-    emiAmount,
-    interestAmount,
-  } = formData;
-
-  // ---------------------------------
-  // Base payload
-  // ---------------------------------
-
-  const payload = {
-    userId: user?._id,
-    loanDetails: title.trim(),
-    lenderName: lender.trim(),
-    loanType,
-    totalAmount: Number(principal),
-    startDate,
+    setMonthlyPayment(e?.target?.name);
   };
 
-  // ---------------------------------
-  // Non-loan transaction
-  // ---------------------------------
-
-  if (loanType !== 'loan') {
-    return payload;
-  }
-
-  // ---------------------------------
-  // Loan payment type
-  // ---------------------------------
-
-  payload.paymentType = monthlyPayment;
-
-  // ---------------------------------
-  // EMI-based loan
-  // ---------------------------------
-
-  if (monthlyPayment === 'emi') {
-    const emi = Number(emiAmount) || 0;
-    const tenure = Number(tenureMonths) || 0;
-
-    payload.emiAmount = emi;
-    payload.tenureMonths = tenure;
-
-    // Generate EMI schedule
-    payload.emiSchedule = generateEmiSchedule({
-      emiAmount: emi,
-      tenureMonths: tenure,
+  const buildLoanPayload = () => {
+    const {
+      title,
+      lender,
+      principal,
       startDate,
-    });
-  }
+      tenureMonths,
+      emiAmount,
+      interestAmount,
+    } = formData;
 
-  // ---------------------------------
-  // Interest-only loan
-  // ---------------------------------
+    const payload = {
+      userId: user?._id,
+      loanDetails: title.trim(),
+      lenderName: lender.trim(),
+      loanType,
+      totalAmount: Number(principal),
+      startDate,
+    };
 
-  if (monthlyPayment === 'interest') {
-    payload.interestAmount =
-      Number(interestAmount) || 0;
-  }
+    if (loanType !== 'loan') {
+      return payload;
+    }
 
-  return payload;
-};
+    payload.paymentType = monthlyPayment;
 
-  // Form Submit Handler
+    if (monthlyPayment === 'emi') {
+      const emi = Number(emiAmount) || 0;
+      const tenure = Number(tenureMonths) || 0;
+
+      payload.emiAmount = emi;
+      payload.tenureMonths = tenure;
+
+      payload.emiSchedule = generateEmiSchedule({
+        emiAmount: emi,
+        tenureMonths: tenure,
+        startDate,
+      });
+    }
+
+    if (monthlyPayment === 'interest') {
+      payload.interestAmount =
+        Number(interestAmount) || 0;
+    }
+
+    return payload;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
-      // Validate
-      if (!formData.title?.trim() ||
+      if (
+        !formData.title?.trim() ||
         !formData.lender?.trim() ||
-        !formData.principal) {
+        !formData.principal
+      ) {
         setError('Please fill out all required fields.');
         return;
       }
 
-      // Build payload
       const payload = buildLoanPayload();
 
       console.log('Creating loan:', payload);
 
-      // API call
       const res = await loanApi.createNewLoan(payload);
 
       if (!res?.success) {
@@ -205,7 +140,6 @@ export default function AddLoan() {
         return;
       }
 
-      // Success
       navigate('/loans');
     } catch (error) {
       console.error('Create loan error:', error);
@@ -220,7 +154,7 @@ export default function AddLoan() {
 
   const handleLoanTypeChange = (value) => {
     setLoanType(value);
-  }
+  };
 
   useEffect(() => {
     if (loanType !== 'loan' || monthlyPayment !== 'emi') {
@@ -251,187 +185,583 @@ export default function AddLoan() {
 
   return (
     <Box className="finora-add-loan-container">
-      {/* Top Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <IconButton onClick={() => navigate(-1)} sx={{ bgcolor: '#ffffff', border: '1px solid #e2e8f0' }}>
+
+      {/* ================= HEADER ================= */}
+      <Box className="finora-add-loan-header">
+
+        <IconButton
+          onClick={() => navigate(-1)}
+          className="finora-back-button"
+        >
           <ArrowBackIcon />
         </IconButton>
-        <Box>
-          <Typography variant="h5" fontWeight="700">
+
+        <Box className="finora-header-content">
+          <Typography
+            variant="h5"
+            className="finora-page-title"
+          >
             Add New Loan
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Enter your loan details. Monthly EMIs and totals will be calculated automatically.
+
+          <Typography
+            variant="body2"
+            className="finora-page-subtitle"
+          >
+            Enter your loan details. Monthly EMIs and totals
+            will be calculated automatically.
           </Typography>
         </Box>
+
       </Box>
 
+      {/* ================= ERROR ================= */}
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert
+          severity="error"
+          className="finora-loan-alert"
+          onClose={() => setError('')}
+        >
           {error}
         </Alert>
       )}
 
-      <Box component="form" onSubmit={handleSubmit} noValidate>
-        <Grid container spacing={3}>
-          {/* Form Inputs (Left Column) */}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+      >
+
+        <Grid
+          container
+          spacing={3}
+          className="finora-add-loan-grid"
+        >
+
+          {/* ================= LEFT FORM ================= */}
           <Grid item xs={12} md={8}>
-            <Card elevation={0} className="finora-card" sx={{ p: 1 }}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="600" mb={2}>
-                  Loan Specifications
-                </Typography>
-                <div style={{ display: "flex", gap: "20px" }} >
-                  <Typography variant="h6" fontWeight="600" mb={2}>
+
+            <Card
+              elevation={0}
+              className="finora-card finora-loan-form-card"
+            >
+
+              <CardContent className="finora-card-content">
+
+                {/* Section Header */}
+                <Box className="finora-section-header">
+
+                  <Box className="finora-section-icon">
+                    <WalletIcon />
+                  </Box>
+
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      className="finora-section-title"
+                    >
+                      Loan Specifications
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      className="finora-section-description"
+                    >
+                      Add the basic information about this loan.
+                    </Typography>
+                  </Box>
+
+                </Box>
+
+                <Divider className="finora-section-divider" />
+
+                {/* ================= LOAN TYPE ================= */}
+                <Box className="finora-loan-type-section">
+
+                  <Typography
+                    className="finora-field-section-label"
+                  >
                     Loan Type
                   </Typography>
-                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                      <Checkbox checked={loanType === 'loan'} onChange={() => handleLoanTypeChange('loan')} />
-                      <Typography fontWeight="600" mb={2}>
-                        Loan
-                      </Typography>
-                    </div>
-                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                      <Checkbox checked={loanType === 'debt'} onChange={() => handleLoanTypeChange('debt')} />
-                      <Typography fontWeight="600" mb={2}>
-                        Debt
-                      </Typography>
-                    </div>
-                  </div>
-                </div>
 
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} size={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Loan Title"
-                      name="title"
-                      placeholder="e.g., Home Renovation Loan"
-                      value={formData.title}
-                      onChange={handleChange}
-                    />
+                  <Box className="finora-type-options">
+
+                    <Box
+                      className={`finora-type-option ${loanType === 'loan'
+                          ? 'selected'
+                          : ''
+                        }`}
+                      onClick={() =>
+                        handleLoanTypeChange('loan')
+                      }
+                    >
+                      <Checkbox
+                        checked={loanType === 'loan'}
+                        onChange={() =>
+                          handleLoanTypeChange('loan')
+                        }
+                      />
+
+                      <Box>
+                        <Typography
+                          className="finora-option-title"
+                        >
+                          Loan
+                        </Typography>
+
+                        <Typography
+                          className="finora-option-description"
+                        >
+                          EMI based borrowing
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Box
+                      className={`finora-type-option ${loanType === 'debt'
+                          ? 'selected'
+                          : ''
+                        }`}
+                      onClick={() =>
+                        handleLoanTypeChange('debt')
+                      }
+                    >
+                      <Checkbox
+                        checked={loanType === 'debt'}
+                        onChange={() =>
+                          handleLoanTypeChange('debt')
+                        }
+                      />
+
+                      <Box>
+                        <Typography
+                          className="finora-option-title"
+                        >
+                          Debt
+                        </Typography>
+
+                        <Typography
+                          className="finora-option-description"
+                        >
+                          Personal borrowing
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                  </Box>
+
+                </Box>
+
+                {/* ================= BASIC DETAILS ================= */}
+                <Box className="finora-form-section">
+
+                  <Typography className="finora-subsection-title">
+                    Basic Details
+                  </Typography>
+
+                  <Grid container spacing={2}>
+
+                    <Grid item xs={12} sm={6}>
+
+                      <TextField
+                        fullWidth
+                        required
+                        label="Loan Title"
+                        name="title"
+                        placeholder="e.g., Home Renovation Loan"
+                        value={formData.title}
+                        onChange={handleChange}
+                      />
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+
+                      <TextField
+                        fullWidth
+                        required
+                        label="Lender / Bank Name"
+                        name="lender"
+                        placeholder="e.g., HDFC Bank"
+                        value={formData.lender}
+                        onChange={handleChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <BankIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+
+                      <TextField
+                        fullWidth
+                        required
+                        type="number"
+                        label="Loan Amount"
+                        name="principal"
+                        value={formData.principal}
+                        onChange={handleChange}
+                        disabled={
+                          loanType === "loan" &&
+                          monthlyPayment === "emi"
+                        }
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              ₹
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+
+                      <TextField
+                        fullWidth
+                        type="date"
+                        label="Disbursement Date"
+                        name="startDate"
+                        value={formData.startDate}
+                        onChange={handleChange}
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <CalendarIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+
+                    </Grid>
+
                   </Grid>
 
-                  <Grid item xs={12} sm={6} size={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Lender / Bank Name"
-                      name="lender"
-                      placeholder="e.g., HDFC Bank"
-                      value={formData.lender}
-                      onChange={handleChange}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <BankIcon color="action" />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+                </Box>
 
-                  <Grid item xs={12} sm={6} size={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      type="number"
-                      label="Loan Amount"
-                      name="principal"
-                      value={formData.principal}
-                      onChange={handleChange}
-                      disabled={loanType === "loan" && monthlyPayment === "emi"}
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                      }}
-                    />
-                  </Grid>
+                {/* ================= PAYMENT TYPE ================= */}
+                {loanType === "loan" && (
+                  <Box className="finora-form-section">
 
-                  <Grid item xs={12} sm={6} size={6}>
-                    <TextField
-                      fullWidth
-                      type="date"
-                      label="Disbursement Date"
-                      name="startDate"
-                      value={formData.startDate}
-                      onChange={handleChange}
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
+                    <Typography className="finora-subsection-title">
+                      Monthly Payment
+                    </Typography>
 
-                  <Grid item size={12}>
-                    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-                      <FormLabel component="legend">Monthly payment</FormLabel>
-                      <FormGroup sx={{ display: 'flex', flexDirection: "row", gap: "1em" }} >
+                    <FormControl
+                      component="fieldset"
+                      className="finora-payment-control"
+                    >
+
+                      <FormLabel component="legend">
+                        Choose payment method
+                      </FormLabel>
+
+                      <FormGroup className="finora-payment-options">
+
                         <FormControlLabel
+                          className={`finora-payment-option ${monthlyPayment === "emi"
+                              ? "selected"
+                              : ""
+                            }`}
                           control={
-                            <Checkbox checked={monthlyPayment === "emi"} onChange={handlePaymentTypeChange} name="emi" />
+                            <Checkbox
+                              checked={
+                                monthlyPayment === "emi"
+                              }
+                              onChange={
+                                handlePaymentTypeChange
+                              }
+                              name="emi"
+                            />
                           }
-                          label="EMI"
+                          label={
+                            <Box>
+                              <Typography
+                                fontWeight={600}
+                              >
+                                EMI
+                              </Typography>
+
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                Fixed monthly payment
+                              </Typography>
+                            </Box>
+                          }
                         />
+
                         <FormControlLabel
+                          className={`finora-payment-option ${monthlyPayment === "interest"
+                              ? "selected"
+                              : ""
+                            }`}
                           control={
-                            <Checkbox checked={monthlyPayment === "interest"} onChange={handlePaymentTypeChange} name="interest" />
+                            <Checkbox
+                              checked={
+                                monthlyPayment === "interest"
+                              }
+                              onChange={
+                                handlePaymentTypeChange
+                              }
+                              name="interest"
+                            />
                           }
-                          label="Interest only "
+                          label={
+                            <Box>
+                              <Typography
+                                fontWeight={600}
+                              >
+                                Interest only
+                              </Typography>
+
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                Pay interest periodically
+                              </Typography>
+                            </Box>
+                          }
                         />
+
                       </FormGroup>
+
                     </FormControl>
-                  </Grid>
-                  {loanType === "loan" && (
+
+                  </Box>
+                )}
+
+                {/* ================= EMI DETAILS ================= */}
+                {loanType === "loan" && (
+                  <Box className="finora-form-section">
+
+                    {monthlyPayment === 'emi' ? (
+                      <>
+
+                        <Typography className="finora-subsection-title">
+                          EMI Details
+                        </Typography>
+
+                        <Grid container spacing={2}>
+
+                          <Grid item xs={12} sm={6}>
+
+                            <TextField
+                              fullWidth
+                              type="number"
+                              label="EMI Amount"
+                              name="emiAmount"
+                              value={formData.emiAmount}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <PaymentIcon color="action" />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+
+                          </Grid>
+
+                          <Grid item xs={12} sm={6}>
+
+                            <TextField
+                              fullWidth
+                              type="number"
+                              label="Tenure Months"
+                              name="tenureMonths"
+                              value={formData.tenureMonths}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    months
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+
+                          </Grid>
+
+                        </Grid>
+
+                      </>
+                    ) : (
+                      <>
+
+                        <Typography className="finora-subsection-title">
+                          Interest Details
+                        </Typography>
+
+                        <Grid container spacing={2}>
+
+                          <Grid item xs={12} sm={6}>
+
+                            <TextField
+                              fullWidth
+                              type="number"
+                              label="Interest Amount"
+                              name="interestAmount"
+                              value={formData?.interestAmount}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <PercentIcon color="action" />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+
+                          </Grid>
+
+                        </Grid>
+
+                      </>
+                    )}
+
+                  </Box>
+                )}
+
+              </CardContent>
+
+            </Card>
+
+          </Grid>
+
+          {/* ================= SUMMARY ================= */}
+          <Grid item xs={12} md={4}>
+
+            <Paper
+              elevation={0}
+              className="finora-summary-card"
+            >
+
+              <Box className="finora-summary-header">
+
+                <Box className="finora-summary-icon">
+                  <PaymentIcon />
+                </Box>
+
+                <Box>
+
+                  <Typography
+                    className="finora-summary-title"
+                  >
+                    Loan Summary
+                  </Typography>
+
+                  <Typography
+                    className="finora-summary-description"
+                  >
+                    Review your loan before saving.
+                  </Typography>
+
+                </Box>
+
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              <Box className="finora-summary-content">
+
+                <Box className="finora-summary-row">
+                  <Typography>
+                    Loan Type
+                  </Typography>
+
+                  <Typography fontWeight={600}>
+                    {loanType === 'loan'
+                      ? 'Loan'
+                      : 'Debt'}
+                  </Typography>
+                </Box>
+
+                <Box className="finora-summary-row">
+                  <Typography>
+                    Payment Type
+                  </Typography>
+
+                  <Typography fontWeight={600}>
+                    {loanType === 'loan'
+                      ? monthlyPayment === 'emi'
+                        ? 'EMI'
+                        : 'Interest Only'
+                      : '—'}
+                  </Typography>
+                </Box>
+
+                <Box className="finora-summary-row">
+                  <Typography>
+                    Loan Amount
+                  </Typography>
+
+                  <Typography
+                    fontWeight={700}
+                    className="finora-summary-amount"
+                  >
+                    ₹
+                    {Number(
+                      formData.principal || 0
+                    ).toLocaleString('en-IN')}
+                  </Typography>
+                </Box>
+
+                {loanType === 'loan' &&
+                  monthlyPayment === 'emi' && (
                     <>
-                      {monthlyPayment === 'emi' ? <>
-                        <Grid item xs={12} sm={6} size={6}>
-                          <TextField
-                            fullWidth
-                            type="number"
-                            label="EMI Amount"
-                            name="emiAmount"
-                            value={formData.emiAmount}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6} size={6}>
-                          <TextField
-                            fullWidth
-                            type="number"
-                            label="Tenure Months"
-                            name="tenureMonths"
-                            value={formData.tenureMonths}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        </Grid>
-                      </> : <>
-                        <Grid item xs={12} sm={6} size={6}>
-                          <TextField
-                            fullWidth
-                            type="number"
-                            label="Interest Amount"
-                            name="interestAmount"
-                            value={formData?.interestAmount}
-                            onChange={handleChange}
-                            InputLabelProps={{ shrink: true }}
-                          />
-                        </Grid>
-                      </>}
+                      <Box className="finora-summary-row">
+
+                        <Typography>
+                          Monthly EMI
+                        </Typography>
+
+                        <Typography fontWeight={600}>
+                          ₹
+                          {Number(
+                            formData.emiAmount || 0
+                          ).toLocaleString('en-IN')}
+                        </Typography>
+
+                      </Box>
+
+                      <Box className="finora-summary-row">
+
+                        <Typography>
+                          Tenure
+                        </Typography>
+
+                        <Typography fontWeight={600}>
+                          {formData.tenureMonths || 0}{' '}
+                          months
+                        </Typography>
+
+                      </Box>
                     </>
                   )}
-                </Grid>
-                {/* {loanType === "loan" && (
-                  <div style={{margin: "10px"}}>
-                    <EmiScheduleTable emiSchedule={emiSchedule} />
-                  </div>
-                )} */}
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Dynamic Summary Sidebar (Right Column) */}
-          <Grid item xs={12} md={4}>
-            <Paper elevation={0} className="finora-summary-card">
+
+              </Box>
 
               <Button
                 type="submit"
@@ -439,14 +769,26 @@ export default function AddLoan() {
                 variant="contained"
                 size="large"
                 startIcon={<SaveIcon />}
-                sx={{ borderRadius: '8px', py: 1.2, fontWeight: 600, textTransform: 'none' }}
+                className="finora-save-loan-button"
               >
                 Save & Link EMI
               </Button>
+
+              <Typography
+                className="finora-summary-note"
+              >
+                Your EMI schedule will be generated
+                automatically after saving.
+              </Typography>
+
             </Paper>
+
           </Grid>
+
         </Grid>
+
       </Box>
+
     </Box>
   );
 }

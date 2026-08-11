@@ -1,32 +1,60 @@
-import { useState } from 'react';
-import { Box, Toolbar } from '@mui/material';
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
-import './Layout.css';
+import { useState } from "react";
+import { Box, Toolbar } from "@mui/material";
 
-export default function AppLayout({children}) {
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+
+import "./Layout.css";
+
+const SIDEBAR_WIDTH = 260;
+
+export default function AppLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileOpen((current) => !current);
   };
 
   return (
-    <Box sx={{ display: 'flex', bgcolor: '#f8fafc', minHeight: '100vh' }}>
-      <Navbar handleDrawerToggle={handleDrawerToggle} />
-      <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+    <Box className="finora-app-layout">
 
-      {/* Main Content Area */}
+      {/* =====================================================
+          TOP NAVBAR
+      ===================================================== */}
+
+      <Navbar
+        handleDrawerToggle={handleDrawerToggle}
+      />
+
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
+
+      <Sidebar
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+      />
+
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
+
       <Box
         component="main"
+        className="finora-main-content"
         sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - 260px)` },
+          ml: {
+            xs: 0,
+            md: `${SIDEBAR_WIDTH}px`,
+          },
         }}
       >
-        <Toolbar /> {/* Spacer for fixed Navbar */}
-        {children}
+        {/* AppBar spacer */}
+        <Toolbar />
+
+        <Box className="finora-page-container">
+          {children}
+        </Box>
       </Box>
     </Box>
   );

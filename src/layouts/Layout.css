@@ -1,59 +1,1077 @@
-/* Layout Styles */
-.finora-navbar {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
-  border-bottom: 1px solid #e2e8f0;
+
+/* =========================================================
+   APP LAYOUT
+========================================================= */
+
+.finora-app-layout {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(99, 102, 241, 0.035),
+      transparent 25%
+    ),
+    var(--finora-background);
+
+  color: var(--finora-text-primary);
 }
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.finora-main-content {
+  min-height: 100vh;
+
+  width: auto;
+
+  box-sizing: border-box;
+
+  transition:
+    margin-left 0.2s ease;
+}
+
+
+/* =========================================================
+   PAGE CONTAINER
+========================================================= */
+
+.finora-page-container {
+  width: 100%;
+
+  max-width: 1600px;
+
+  min-height:
+    calc(100vh - var(--finora-navbar-height));
+
+  margin: 0 auto;
+
+  padding:
+    24px 28px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.finora-navbar {
+  background:
+    rgba(255, 255, 255, 0.94) !important;
+
+  color:
+    var(--finora-text-primary) !important;
+
+  border-bottom:
+    1px solid var(--finora-border) !important;
+
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.03) !important;
+
+  backdrop-filter: blur(14px);
+
+  -webkit-backdrop-filter: blur(14px);
+
+  z-index: 1200 !important;
+}
+
+
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
+
+.finora-mobile-menu-button {
+  width: 38px;
+
+  height: 38px;
+
+  margin-right: 7px !important;
+
+  border-radius:
+    var(--finora-radius-md) !important;
+
+  color:
+    var(--finora-text-secondary) !important;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+
+  &:hover {
+    background:
+      #f1f5f9 !important;
+
+    color:
+      var(--finora-primary) !important;
+  }
+
+  svg {
+    width: 21px;
+
+    height: 21px;
+  }
+}
+
+
+/* =========================================================
+   NAVBAR TITLE
+========================================================= */
+
+.finora-navbar-title-wrapper {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  min-width: 0;
+}
+
+
+.finora-navbar-title {
+  color:
+    var(--finora-text-primary);
+
+  font-size:
+    14px !important;
+
+  line-height:
+    1.3 !important;
+
+  font-weight:
+    750 !important;
+
+  letter-spacing:
+    -0.2px;
+
+  white-space:
+    nowrap;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+}
+
+
+.finora-navbar-subtitle {
+  margin-top:
+    1px !important;
+
+  color:
+    var(--finora-text-muted);
+
+  font-size:
+    8px !important;
+
+  line-height:
+    1.4 !important;
+
+  white-space:
+    nowrap;
+}
+
+
+/* =========================================================
+   SEARCH BAR
+========================================================= */
 
 .finora-search-bar {
-  display: flex;
-  align-items: center;
-  background-color: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 8px;
   width: 280px;
+
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  padding:
+    0 12px;
+
+  border:
+    1px solid transparent;
+
+  border-radius:
+    var(--finora-radius-md);
+
+  background:
+    #f8fafc;
+
+  box-sizing:
+    border-box;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background:
+      var(--finora-surface);
+
+    border-color:
+      var(--finora-border);
+  }
+
+  &:focus-within {
+    background:
+      var(--finora-surface);
+
+    border-color:
+      #c7d2fe;
+
+    box-shadow:
+      0 0 0 3px
+      rgba(79, 70, 229, 0.07);
+  }
 }
 
-/* Sidebar Styles */
-.finora-sidebar-inner {
-  height: 100%;
-  background-color: #ffffff;
-  padding: 16px;
+
+.finora-search-icon {
+  width:
+    18px !important;
+
+  height:
+    18px !important;
+
+  margin-right:
+    8px;
+
+  color:
+    var(--finora-text-muted);
 }
+
+
+.finora-search-input {
+  color:
+    var(--finora-text-secondary);
+
+  font-size:
+    10px !important;
+
+  input {
+    padding:
+      0 !important;
+
+    font-size:
+      10px !important;
+
+    line-height:
+      1.5;
+
+    &::placeholder {
+      color:
+        var(--finora-text-muted);
+
+      opacity:
+        1;
+    }
+  }
+}
+
+
+/* =========================================================
+   NAVBAR ACTION BUTTON
+========================================================= */
+
+.finora-navbar-action {
+  width:
+    38px;
+
+  height:
+    38px;
+
+  margin-left:
+    8px !important;
+
+  border-radius:
+    var(--finora-radius-md) !important;
+
+  color:
+    var(--finora-text-secondary) !important;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+
+  &:hover {
+    background:
+      #f8fafc !important;
+
+    color:
+      var(--finora-primary) !important;
+  }
+
+  svg {
+    width:
+      20px;
+
+    height:
+      20px;
+  }
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+========================================================= */
+
+.finora-notification-badge {
+  .MuiBadge-badge {
+    min-width:
+      15px;
+
+    height:
+      15px;
+
+    padding:
+      0 3px;
+
+    top:
+      1px;
+
+    right:
+      1px;
+
+    border:
+      2px solid
+      var(--finora-surface);
+
+    font-size:
+      7px;
+
+    font-weight:
+      700;
+  }
+}
+
+
+/* =========================================================
+   PROFILE BUTTON
+========================================================= */
+
+.finora-profile-button {
+  margin-left:
+    5px !important;
+
+  padding:
+    3px !important;
+
+  border-radius:
+    50% !important;
+
+  transition:
+    background 0.18s ease;
+
+  &:hover {
+    background:
+      #f1f5f9 !important;
+  }
+}
+
+
+/* =========================================================
+   PROFILE AVATAR
+========================================================= */
+
+.finora-profile-avatar {
+  width:
+    34px !important;
+
+  height:
+    34px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--finora-primary),
+      #818cf8
+    ) !important;
+
+  color:
+    #ffffff;
+
+  font-size:
+    11px !important;
+
+  font-weight:
+    750 !important;
+
+  box-shadow:
+    0 3px 8px
+    rgba(79, 70, 229, 0.2);
+}
+
+
+/* =========================================================
+   ACCOUNT MENU
+========================================================= */
+
+.finora-account-menu {
+  min-width:
+    210px;
+
+  margin-top:
+    8px;
+
+  padding:
+    6px 0;
+
+  border:
+    1px solid var(--finora-border);
+
+  border-radius:
+    13px !important;
+
+  box-shadow:
+    var(--finora-shadow-lg) !important;
+
+  overflow:
+    hidden;
+
+  .MuiMenuItem-root {
+    min-height:
+      42px;
+
+    padding:
+      7px 14px;
+
+    margin:
+      2px 6px;
+
+    border-radius:
+      7px;
+
+    color:
+      var(--finora-text-secondary);
+
+    font-size:
+      11px;
+
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+
+    &:hover {
+      background:
+        #f8fafc;
+    }
+
+    .MuiListItemIcon-root {
+      min-width:
+        32px;
+
+      color:
+        var(--finora-text-muted);
+
+      svg {
+        width:
+          17px;
+
+        height:
+          17px;
+      }
+    }
+
+    .MuiListItemText-primary {
+      font-size:
+        10px;
+    }
+  }
+
+  .MuiDivider-root {
+    margin:
+      5px 0;
+
+    border-color:
+      var(--finora-border-light);
+  }
+}
+
+
+/* =========================================================
+   ACCOUNT USER MENU ITEM
+========================================================= */
+
+.finora-account-user {
+  cursor:
+    default !important;
+
+  &:hover {
+    background:
+      transparent !important;
+  }
+
+  .MuiListItemText-primary {
+    color:
+      #334155;
+
+    font-size:
+      11px;
+
+    font-weight:
+      700;
+  }
+
+  .MuiListItemText-secondary {
+    margin-top:
+      1px;
+
+    color:
+      var(--finora-text-muted);
+
+    font-size:
+      8px;
+  }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.finora-logout-item {
+  color:
+    var(--finora-danger) !important;
+
+  .MuiListItemIcon-root {
+    color:
+      var(--finora-danger) !important;
+  }
+
+  &:hover {
+    background:
+      var(--finora-danger-light) !important;
+  }
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.finora-sidebar-inner {
+  height:
+    100%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  padding:
+    14px;
+
+  box-sizing:
+    border-box;
+
+  background:
+    var(--finora-surface);
+
+  border-right:
+    1px solid var(--finora-border);
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+========================================================= */
 
 .finora-sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  padding:
+    8px 8px 14px;
 }
+
+
+.finora-sidebar-brand-icon {
+  width:
+    35px;
+
+  height:
+    35px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    var(--finora-radius-md);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--finora-primary),
+      #6366f1
+    );
+
+  color:
+    #ffffff;
+
+  box-shadow:
+    0 5px 12px
+    rgba(79, 70, 229, 0.18);
+
+  svg {
+    width:
+      19px;
+
+    height:
+      19px;
+  }
+}
+
+
+.finora-sidebar-brand-text {
+  color:
+    var(--finora-text-primary);
+
+  font-size:
+    17px;
+
+  line-height:
+    1.1;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    -0.5px;
+}
+
+
+.finora-sidebar-brand-subtitle {
+  margin-top:
+    2px;
+
+  color:
+    var(--finora-text-muted);
+
+  font-size:
+    7px;
+
+  line-height:
+    1.3;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    0.02em;
+}
+
+
+/* =========================================================
+   SIDEBAR DIVIDER
+========================================================= */
+
+.finora-sidebar-divider {
+  border-color:
+    var(--finora-border-light) !important;
+}
+
+
+/* =========================================================
+   NAV SECTION LABEL
+========================================================= */
+
+.finora-nav-section-label {
+  padding:
+    17px 10px 7px;
+
+  color:
+    var(--finora-text-muted);
+
+  font-size:
+    8px !important;
+
+  line-height:
+    1.3;
+
+  font-weight:
+    800 !important;
+
+  letter-spacing:
+    0.08em;
+
+  text-transform:
+    uppercase;
+}
+
+
+/* =========================================================
+   NAVIGATION ITEM
+========================================================= */
 
 .finora-nav-item {
-  border-radius: 8px !important;
-  color: #475569 !important;
+  min-height:
+    43px !important;
+
+  margin-bottom:
+    3px !important;
+
+  padding:
+    7px 10px !important;
+
+  border-radius:
+    var(--finora-radius-md) !important;
+
+  color:
+    var(--finora-text-secondary) !important;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+
+  .MuiListItemText-primary {
+    font-size:
+      10px;
+
+    line-height:
+      1.4;
+
+    font-weight:
+      550;
+  }
+
+  &:hover {
+    background:
+      #f8fafc !important;
+
+    color:
+      #334155 !important;
+  }
+
+  &.active {
+    background:
+      linear-gradient(
+        90deg,
+        var(--finora-primary-light),
+        var(--finora-primary-soft)
+      ) !important;
+
+    color:
+      var(--finora-primary) !important;
+
+    .MuiListItemText-primary {
+      font-weight:
+        700;
+    }
+
+    .finora-nav-icon {
+      color:
+        var(--finora-primary) !important;
+    }
+  }
 }
 
-.finora-nav-item:hover {
-  background-color: #f1f5f9 !important;
-}
 
-.finora-nav-item.active {
-  background-color: #f0fdf4 !important;
-  color: #0d9488 !important;
-}
-
-.finora-nav-item.active .finora-nav-icon {
-  color: #0d9488 !important;
-}
+/* =========================================================
+   NAVIGATION ICON
+========================================================= */
 
 .finora-nav-icon {
-  min-width: 40px !important;
-  color: #64748b;
+  min-width:
+    38px !important;
+
+  color:
+    var(--finora-text-muted);
+
+  transition:
+    color 0.18s ease;
+
+  svg {
+    width:
+      19px;
+
+    height:
+      19px;
+  }
 }
 
-/* Card Styling */
+
+/* =========================================================
+   SIDEBAR BOTTOM
+========================================================= */
+
+.finora-sidebar-bottom {
+  margin-top:
+    auto;
+}
+
+
+/* =========================================================
+   STAT CARD
+========================================================= */
+
 .finora-stat-card {
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
+  border:
+    1px solid var(--finora-border) !important;
+
+  border-radius:
+    var(--finora-radius-lg) !important;
+
+  background:
+    rgba(255, 255, 255, 0.96) !important;
+
+  box-shadow:
+    var(--finora-shadow-sm) !important;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color:
+      #cbd5e1 !important;
+
+    box-shadow:
+      var(--finora-shadow-md) !important;
+  }
+}
+
+
+/* =========================================================
+   GENERAL FINORA CARD
+========================================================= */
+
+.finora-card {
+  border:
+    1px solid var(--finora-border);
+
+  border-radius:
+    var(--finora-radius-lg);
+
+  background:
+    var(--finora-surface);
+
+  box-shadow:
+    var(--finora-shadow-sm);
+}
+
+
+/* =========================================================
+   MOBILE DRAWER
+========================================================= */
+
+.MuiDrawer-paper {
+  border:
+    none !important;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .finora-search-bar {
+    width:
+      220px;
+  }
+
+  .finora-page-container {
+    padding:
+      20px 22px 35px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* -----------------------------------------
+     Main
+  ----------------------------------------- */
+
+  .finora-main-content {
+    width:
+      100%;
+
+    margin-left:
+      0 !important;
+  }
+
+
+  .finora-page-container {
+    width:
+      100%;
+
+    min-height:
+      calc(100vh - 56px);
+
+    padding:
+      16px 14px 28px;
+  }
+
+
+  /* -----------------------------------------
+     Navbar
+  ----------------------------------------- */
+
+  .finora-navbar-title {
+    font-size:
+      13px !important;
+  }
+
+
+  .finora-navbar-subtitle {
+    display:
+      none;
+  }
+
+
+  .finora-navbar-action {
+    width:
+      36px;
+
+    height:
+      36px;
+
+    margin-left:
+      2px !important;
+  }
+
+
+  .finora-search-bar {
+    display:
+      none;
+  }
+
+
+  .finora-profile-avatar {
+    width:
+      32px !important;
+
+    height:
+      32px !important;
+  }
+
+
+  /* -----------------------------------------
+     Sidebar
+  ----------------------------------------- */
+
+  .finora-sidebar-inner {
+    padding:
+      12px;
+  }
+
+
+  .finora-nav-item {
+    min-height:
+      46px !important;
+
+    border-radius:
+      11px !important;
+  }
+
+
+  /* -----------------------------------------
+     Cards
+  ----------------------------------------- */
+
+  .finora-stat-card {
+    border-radius:
+      12px !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .finora-page-container {
+    padding:
+      14px 10px 24px;
+  }
+
+
+  .finora-navbar-title {
+    font-size:
+      12px !important;
+  }
+
+
+  .finora-mobile-menu-button {
+    width:
+      34px;
+
+    height:
+      34px;
+
+    margin-right:
+      4px !important;
+  }
+
+
+  .finora-navbar-action {
+    width:
+      34px;
+
+    height:
+      34px;
+  }
+
+
+  .finora-profile-avatar {
+    width:
+      30px !important;
+
+    height:
+      30px !important;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   Accessibility improvement
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .finora-app-layout *,
+  .finora-app-layout *::before,
+  .finora-app-layout *::after {
+    scroll-behavior:
+      auto !important;
+
+    transition:
+      none !important;
+
+    animation:
+      none !important;
+  }
 }

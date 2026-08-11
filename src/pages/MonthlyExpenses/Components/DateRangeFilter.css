@@ -1,0 +1,547 @@
+/* ==========================================================================
+   FINORA DATE RANGE FILTER
+   ========================================================================== */
+
+.finora-date-filter {
+  display: inline-flex;
+  max-width: 100%;
+}
+
+
+/* ==========================================================================
+   TRIGGER
+   ========================================================================== */
+
+.finora-date-filter-trigger {
+  min-height: 42px !important;
+
+  padding: 5px 12px !important;
+
+  border: 1px solid #cbd5e1 !important;
+
+  border-radius: 10px !important;
+
+  background: #ffffff !important;
+
+  color: #334155 !important;
+
+  text-transform: none !important;
+
+  box-shadow: none !important;
+
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease !important;
+}
+
+
+.finora-date-filter-trigger:hover {
+  border-color: #0d9488 !important;
+
+  background: #f0fdfa !important;
+}
+
+
+.finora-date-filter-trigger.is-open {
+  border-color: #0d9488 !important;
+
+  background: #f0fdfa !important;
+
+  box-shadow:
+    0 0 0 3px rgba(13, 148, 136, 0.08) !important;
+}
+
+
+.finora-date-filter-trigger .MuiButton-startIcon {
+  color: #0d9488;
+}
+
+
+.finora-date-filter-trigger .MuiButton-endIcon {
+  color: #64748b;
+}
+
+
+/* ==========================================================================
+   TRIGGER CONTENT
+   ========================================================================== */
+
+.finora-date-filter-trigger-content {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  min-width: 0;
+
+  text-align: left;
+}
+
+
+.finora-date-filter-label {
+  color: #0f172a;
+
+  font-size: 0.82rem;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+.finora-date-filter-range {
+  color: #64748b;
+
+  font-size: 0.68rem;
+
+  line-height: 1.25;
+}
+
+
+/* ==========================================================================
+   POPOVER
+   ========================================================================== */
+
+.finora-date-filter-popover {
+  width: 390px;
+
+  max-width: calc(100vw - 24px);
+
+  margin-top: 8px;
+
+  padding: 0 !important;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px !important;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 50px rgba(15, 23, 42, 0.14) !important;
+
+  overflow: hidden;
+}
+
+
+.finora-date-filter-panel {
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.finora-date-filter-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 16px 18px;
+}
+
+
+.finora-date-filter-title {
+  color: #0f172a !important;
+
+  font-size: 0.95rem !important;
+
+  font-weight: 700 !important;
+}
+
+
+.finora-date-filter-subtitle {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #64748b !important;
+
+  font-size: 0.7rem !important;
+}
+
+
+.finora-date-filter-header .MuiIconButton-root {
+  color: #64748b;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.finora-date-filter-header .MuiIconButton-root:hover {
+  background: #f1f5f9;
+
+  color: #0f172a;
+}
+
+
+/* ==========================================================================
+   SECTIONS
+   ========================================================================== */
+
+.finora-filter-section {
+  padding: 16px 18px;
+}
+
+
+.finora-filter-section-title {
+  margin-bottom: 10px !important;
+
+  color: #475569 !important;
+
+  font-size: 0.7rem !important;
+
+  font-weight: 700 !important;
+
+  letter-spacing: 0.4px;
+
+  text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   QUICK PRESETS
+   ========================================================================== */
+
+.finora-filter-presets {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+
+.finora-filter-preset {
+  min-height: 38px !important;
+
+  justify-content: flex-start !important;
+
+  padding: 7px 10px !important;
+
+  border: 1px solid #e2e8f0 !important;
+
+  border-radius: 8px !important;
+
+  background: #ffffff !important;
+
+  color: #475569 !important;
+
+  font-size: 0.75rem !important;
+
+  font-weight: 600 !important;
+
+  text-transform: none !important;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease !important;
+}
+
+
+.finora-filter-preset:hover {
+  border-color: #99f6e4 !important;
+
+  background: #f0fdfa !important;
+
+  color: #0f766e !important;
+
+  transform: translateY(-1px);
+}
+
+
+.finora-filter-preset.active {
+  border-color: #99f6e4 !important;
+
+  background: #ecfdf5 !important;
+
+  color: #0f766e !important;
+}
+
+
+.finora-filter-preset .MuiButton-startIcon {
+  margin-right: 5px;
+
+  color: inherit;
+}
+
+
+.finora-filter-preset .MuiButton-endIcon {
+  margin-left: auto;
+
+  color: #0d9488;
+}
+
+
+/* ==========================================================================
+   INPUTS
+   ========================================================================== */
+
+.finora-date-filter-panel .MuiTextField-root {
+  background: #ffffff;
+}
+
+
+.finora-date-filter-panel .MuiOutlinedInput-root {
+  border-radius: 8px;
+
+  background: #ffffff;
+}
+
+
+.finora-date-filter-panel .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #94a3b8;
+}
+
+
+.finora-date-filter-panel .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #0d9488;
+
+  border-width: 1px;
+}
+
+
+/* ==========================================================================
+   APPLY BUTTON
+   ========================================================================== */
+
+.finora-apply-button {
+  min-height: 42px !important;
+
+  margin-top: 14px !important;
+
+  border-radius: 9px !important;
+
+  background: #0d9488 !important;
+
+  box-shadow:
+    0 4px 10px rgba(13, 148, 136, 0.18) !important;
+
+  color: #ffffff !important;
+
+  font-size: 0.8rem !important;
+
+  font-weight: 700 !important;
+
+  text-transform: none !important;
+
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease !important;
+}
+
+
+.finora-apply-button:hover {
+  background: #0f766e !important;
+
+  box-shadow:
+    0 6px 14px rgba(13, 148, 136, 0.24) !important;
+
+  transform: translateY(-1px);
+}
+
+
+.finora-apply-button:disabled {
+  background: #cbd5e1 !important;
+
+  box-shadow: none !important;
+
+  color: #ffffff !important;
+}
+
+
+/* ==========================================================================
+   ERROR
+   ========================================================================== */
+
+.finora-date-filter-error {
+  margin-top: 7px !important;
+
+  color: #dc2626 !important;
+
+  font-size: 0.7rem !important;
+
+  font-weight: 500 !important;
+}
+
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.finora-date-filter-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  min-width: 0;
+
+  padding: 10px 18px;
+
+  background: #f8fafc;
+}
+
+
+.finora-reset-button {
+  color: #64748b !important;
+
+  font-size: 0.72rem !important;
+
+  font-weight: 600 !important;
+
+  text-transform: none !important;
+}
+
+
+.finora-reset-button:hover {
+  background: #e2e8f0 !important;
+
+  color: #334155 !important;
+}
+
+
+.finora-active-range {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #64748b !important;
+
+  font-size: 0.68rem !important;
+
+  font-weight: 500 !important;
+
+  text-align: right;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+
+  .finora-date-filter {
+    width: 100%;
+  }
+
+
+  .finora-date-filter-trigger {
+    width: 100%;
+
+    justify-content: flex-start !important;
+
+    min-height: 44px !important;
+
+    padding-left: 12px !important;
+
+    padding-right: 10px !important;
+  }
+
+
+  .finora-date-filter-trigger-content {
+    flex: 1;
+
+    min-width: 0;
+  }
+
+
+  .finora-date-filter-label {
+    max-width: 100%;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+
+  .finora-date-filter-popover {
+    width: calc(100vw - 24px);
+
+    max-width: calc(100vw - 24px);
+
+    border-radius: 14px !important;
+  }
+
+
+  .finora-filter-section {
+    padding: 14px;
+  }
+
+
+  .finora-date-filter-header {
+    padding: 14px;
+  }
+
+
+  .finora-filter-presets {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .finora-filter-preset {
+    min-height: 40px !important;
+
+    font-size: 0.72rem !important;
+  }
+
+
+  .finora-date-filter-footer {
+    padding: 10px 14px;
+  }
+
+}
+
+
+/* ==========================================================================
+   VERY SMALL DEVICES
+   ========================================================================== */
+
+@media (max-width: 360px) {
+
+  .finora-filter-presets {
+    grid-template-columns: 1fr;
+  }
+
+
+  .finora-filter-preset {
+    width: 100%;
+  }
+
+
+  .finora-date-filter-header {
+    padding: 12px;
+  }
+
+
+  .finora-filter-section {
+    padding: 12px;
+  }
+
+}

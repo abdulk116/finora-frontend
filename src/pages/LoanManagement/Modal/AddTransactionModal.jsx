@@ -13,24 +13,30 @@ import {
   Stack,
   IconButton,
   InputAdornment,
+  Divider,
+  Fade,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+
+import {
+  Close as CloseIcon,
+  PaymentsOutlined,
+  CalendarMonthOutlined,
+  NotesOutlined,
+  TitleOutlined,
+  AccountBalanceWalletOutlined,
+} from '@mui/icons-material';
+
 import loanApi from '../../../api/loanApi';
 
-// Styling object for the modal content container
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { xs: '90%', sm: 400 },
-  bgcolor: 'background.paper',
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 3,
-};
+import './AddTransactionModal.css';
 
-export default function AddTransactionModal({ open, onClose, loanId, onSave, loanDetails }) {
+export default function AddTransactionModal({
+  open,
+  onClose,
+  loanId,
+  onSave,
+  loanDetails,
+}) {
   const [formData, setFormData] = useState({
     title: '',
     type: 'paid',
@@ -40,9 +46,11 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
   });
 
   const [errors, setErrors] = useState({});
-  const [paymentType, setPaymentType] = useState('interest')
+  const [paymentType, setPaymentType] = useState('interest');
 
-  const interestOnlyType = loanDetails?.loanType === "loan" && loanDetails?.paymentType === "interest";
+  const interestOnlyType =
+    loanDetails?.loanType === 'loan' &&
+    loanDetails?.paymentType === 'interest';
 
   const amountLabel = interestOnlyType
     ? paymentType === 'interest'
@@ -59,14 +67,26 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
         date: new Date().toISOString().split('T')[0],
         notes: '',
       });
+
       setErrors({});
+      setPaymentType('interest');
     }
   }, [open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+    }
   };
 
   const handlePaymentTypeChange = (e) => {
@@ -76,13 +96,21 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
+
+    if (!formData.title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+
     if (!formData.amount || Number(formData.amount) <= 0) {
       newErrors.amount = 'Enter a valid amount greater than 0';
     }
-    if (!formData.date) newErrors.date = 'Date is required';
+
+    if (!formData.date) {
+      newErrors.date = 'Date is required';
+    }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -94,66 +122,189 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
         amount: Number(formData.amount),
         date: new Date(formData.date).toISOString(),
         notes: formData.notes.trim() || undefined,
-      }
+      };
 
       if (interestOnlyType) {
-        payload["amountType"] = paymentType;
+        payload['amountType'] = paymentType;
       }
-      const res = await loanApi?.addTransactionByLoanId(loanId, payload);
+
+      const res = await loanApi?.addTransactionByLoanId(
+        loanId,
+        payload
+      );
+
       if (res?.success) {
-        onSave()
+        onSave();
       }
     } catch (error) {
-      console.log("error in save transaction", error?.message)
+      console.log(
+        'error in save transaction',
+        error?.message
+      );
     }
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!validate()) return;
 
     saveNewTransaction();
   };
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="modal-title">
-      <Box sx={modalStyle}>
-        {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography id="modal-title" variant="h6" component="h2" fontWeight="bold">
-            Record {loanDetails?.loanType === "loan" ? "Paid" : ""} Transaction
-          </Typography>
-          <IconButton onClick={onClose} size="small">
-            <CloseIcon />
-          </IconButton>
-        </Box>
+    <Modal
+      open={open}
+      onClose={onClose}
+      closeAfterTransition
+      aria-labelledby="transaction-modal-title"
+      aria-describedby="transaction-modal-description"
+    >
+      <Fade in={open}>
+        <Box className="finora-transaction-modal">
 
-        {/* Form Inputs */}
-        <form onSubmit={handleSubmit}>
-          <Stack spacing={2.5}>
-            {loanDetails?.loanType === "debt" && (
-              <FormControl component="fieldset">
-                <FormLabel sx={{ fontSize: '0.875rem', fontWeight: 500, mb: 0.5 }}>
+          {/* ================= HEADER ================= */}
+
+          <Box className="finora-transaction-header">
+
+            <Box className="finora-transaction-title-wrapper">
+
+              <Box className="finora-transaction-icon">
+                <PaymentsOutlined />
+              </Box>
+
+              <Box>
+                <Typography
+                  id="transaction-modal-title"
+                  className="finora-transaction-title"
+                >
+                  Record {loanDetails?.loanType === 'loan' ? 'Paid' : ''}{' '}
+                  Transaction
+                </Typography>
+
+                <Typography
+                  id="transaction-modal-description"
+                  className="finora-transaction-subtitle"
+                >
+                  Add payment details to this loan
+                </Typography>
+              </Box>
+
+            </Box>
+
+            <IconButton
+              onClick={onClose}
+              className="finora-modal-close"
+              aria-label="Close modal"
+            >
+              <CloseIcon />
+            </IconButton>
+
+          </Box>
+
+          <Divider />
+
+          {/* ================= FORM ================= */}
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            className="finora-transaction-form"
+          >
+
+            {/* ================= DEBT TRANSACTION TYPE ================= */}
+
+            {loanDetails?.loanType === 'debt' && (
+              <FormControl className="finora-radio-section">
+
+                <FormLabel className="finora-form-label">
                   Transaction Type
                 </FormLabel>
-                <RadioGroup row name="type" value={formData.type} onChange={handleChange}>
-                  <FormControlLabel value="paid" control={<Radio color="success" />} label="Paid" />
-                  <FormControlLabel value="borrowed" control={<Radio color="error" />} label="Borrowed" />
+
+                <RadioGroup
+                  row
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className="finora-option-group"
+                >
+
+                  <FormControlLabel
+                    value="paid"
+                    control={
+                      <Radio
+                        color="success"
+                        size="small"
+                      />
+                    }
+                    label="Paid"
+                    className="finora-option"
+                  />
+
+                  <FormControlLabel
+                    value="borrowed"
+                    control={
+                      <Radio
+                        color="error"
+                        size="small"
+                      />
+                    }
+                    label="Borrowed"
+                    className="finora-option"
+                  />
+
                 </RadioGroup>
+
               </FormControl>
             )}
 
+            {/* ================= INTEREST TYPE ================= */}
+
             {interestOnlyType && (
-              <FormControl component="fieldset">
-                <FormLabel sx={{ fontSize: '0.875rem', fontWeight: 500, mb: 0.5 }}>
+              <FormControl className="finora-radio-section">
+
+                <FormLabel className="finora-form-label">
                   Payment type
                 </FormLabel>
-                <RadioGroup row name="type" value={paymentType} onChange={handlePaymentTypeChange}>
-                  <FormControlLabel value="interest" control={<Radio color="success" />} label="Interest only" />
-                  <FormControlLabel value="principal" control={<Radio color="error" />} label="principal Amount" />
+
+                <RadioGroup
+                  row
+                  name="type"
+                  value={paymentType}
+                  onChange={handlePaymentTypeChange}
+                  className="finora-option-group"
+                >
+
+                  <FormControlLabel
+                    value="interest"
+                    control={
+                      <Radio
+                        color="success"
+                        size="small"
+                      />
+                    }
+                    label="Interest only"
+                    className="finora-option"
+                  />
+
+                  <FormControlLabel
+                    value="principal"
+                    control={
+                      <Radio
+                        color="error"
+                        size="small"
+                      />
+                    }
+                    label="principal Amount"
+                    className="finora-option"
+                  />
+
                 </RadioGroup>
+
               </FormControl>
             )}
+
+            {/* ================= TITLE ================= */}
 
             <TextField
               label="Title"
@@ -165,7 +316,17 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
               helperText={errors.title}
               fullWidth
               required
+              className="finora-transaction-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <TitleOutlined fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
             />
+
+            {/* ================= AMOUNT ================= */}
 
             <TextField
               label={amountLabel}
@@ -176,12 +337,26 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
               onChange={handleChange}
               error={Boolean(errors.amount)}
               helperText={errors.amount}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-              }}
               fullWidth
               required
+              className="finora-transaction-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountBalanceWalletOutlined fontSize="small" />
+                    <Typography className="finora-currency-symbol">
+                      ₹
+                    </Typography>
+                  </InputAdornment>
+                ),
+              }}
+              inputProps={{
+                min: 0,
+                step: '0.01',
+              }}
             />
+
+            {/* ================= DATE ================= */}
 
             <TextField
               label="Date"
@@ -191,10 +366,22 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
               onChange={handleChange}
               error={Boolean(errors.date)}
               helperText={errors.date}
-              InputLabelProps={{ shrink: true }}
+              InputLabelProps={{
+                shrink: true,
+              }}
               fullWidth
               required
+              className="finora-transaction-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <CalendarMonthOutlined fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
             />
+
+            {/* ================= NOTES ================= */}
 
             <TextField
               label="Notes (Optional)"
@@ -203,22 +390,51 @@ export default function AddTransactionModal({ open, onClose, loanId, onSave, loa
               value={formData.notes}
               onChange={handleChange}
               multiline
-              rows={2}
+              rows={3}
               fullWidth
+              className="finora-transaction-field"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      alignSelf: 'flex-start',
+                      mt: 1.5,
+                    }}
+                  >
+                    <NotesOutlined fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
             />
 
-            {/* Action Buttons */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, pt: 1 }}>
-              <Button onClick={onClose} variant="contained" color="error">
+            {/* ================= ACTIONS ================= */}
+
+            <Box className="finora-transaction-actions">
+
+              <Button
+                onClick={onClose}
+                variant="outlined"
+                color="inherit"
+                className="finora-transaction-cancel"
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="contained">
+
+              <Button
+                type="submit"
+                variant="contained"
+                className="finora-transaction-save"
+              >
                 Save Transaction
               </Button>
+
             </Box>
-          </Stack>
-        </form>
-      </Box>
+
+          </Box>
+
+        </Box>
+      </Fade>
     </Modal>
   );
 }

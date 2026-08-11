@@ -7,33 +7,61 @@ import {
   Badge,
   Avatar,
   Box,
-  Popper,
-} from '@mui/material';
+  Menu,
+  MenuItem,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+
 import {
   Menu as MenuIcon,
   Search as SearchIcon,
-  Notifications as NotificationsIcon,
-} from '@mui/icons-material';
-import './Layout.css';
-import { useState } from 'react';
-import { logout } from '../redux/slices/authSlice';
-import { useDispatch } from 'react-redux';
+  NotificationsNoneRounded,
+  LogoutRounded,
+  PersonRounded,
+  SettingsRounded,
+} from "@mui/icons-material";
+
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { logout } from "../redux/slices/authSlice";
+
+import "./Layout.css";
+
+const NAVBAR_HEIGHT = 64;
 
 export default function Navbar({ handleDrawerToggle }) {
-  const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
 
-  const handleClick = (event) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const menuOpen = Boolean(anchorEl);
+
+  // =========================================================
+  // PROFILE MENU
+  // =========================================================
+
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popper' : undefined;
+  const handleProfileClose = () => {
+    setAnchorEl(null);
+  };
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
 
   const handleLogout = () => {
+    handleProfileClose();
+
     dispatch(logout());
+
     localStorage.clear();
-  }
+  };
 
   return (
     <AppBar
@@ -41,51 +69,200 @@ export default function Navbar({ handleDrawerToggle }) {
       elevation={0}
       className="finora-navbar"
       sx={{
-        width: { sm: `calc(100% - 260px)` },
-        ml: { sm: `260px` },
+        width: {
+          xs: "100%",
+          sm: "calc(100% - 260px)",
+        },
+
+        ml: {
+          xs: 0,
+          sm: "260px",
+        },
+
+        height: NAVBAR_HEIGHT,
       }}
     >
-      <Toolbar>
+      <Toolbar
+        sx={{
+          minHeight: `${NAVBAR_HEIGHT}px !important`,
+          px: {
+            xs: 1.5,
+            sm: 2.5,
+          },
+        }}
+      >
+
+        {/* ===================================================
+            MOBILE MENU
+        =================================================== */}
+
         <IconButton
-          color="inherit"
-          edge="start"
+          aria-label="Open navigation menu"
           onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { sm: 'none' } }}
+          className="finora-mobile-menu-button"
+          sx={{
+            display: {
+              xs: "inline-flex",
+              sm: "none",
+            },
+          }}
         >
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600 }}>
-          Financial Overview
-        </Typography>
+        {/* ===================================================
+            PAGE TITLE
+        =================================================== */}
+
+        <Box className="finora-navbar-title-wrapper">
+          <Typography
+            component="h1"
+            className="finora-navbar-title"
+          >
+            Financial Overview
+          </Typography>
+
+          <Typography className="finora-navbar-subtitle">
+            Manage your finances with clarity
+          </Typography>
+        </Box>
+
+        {/* ===================================================
+            SPACER
+        =================================================== */}
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* Search Bar */}
+        {/* ===================================================
+            SEARCH
+        =================================================== */}
+
         <Box className="finora-search-bar">
-          <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
-          <InputBase placeholder="Search transactions, loans..." fullWidth />
+          <SearchIcon className="finora-search-icon" />
+
+          <InputBase
+            placeholder="Search transactions, loans..."
+            fullWidth
+            inputProps={{
+              "aria-label":
+                "Search transactions and loans",
+            }}
+            className="finora-search-input"
+          />
         </Box>
 
-        {/* Actions & Profile */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
-          <IconButton color="inherit">
-            <Badge badgeContent={3} color="error">
-              <NotificationsIcon color="action" />
-            </Badge>
-          </IconButton>
+        {/* ===================================================
+            NOTIFICATION
+        =================================================== */}
+
+        <IconButton
+          aria-label="Notifications"
+          className="finora-navbar-action"
+        >
+          <Badge
+            badgeContent={3}
+            color="primary"
+            overlap="circular"
+            className="finora-notification-badge"
+          >
+            <NotificationsNoneRounded />
+          </Badge>
+        </IconButton>
+
+        {/* ===================================================
+            PROFILE
+        =================================================== */}
+
+        <IconButton
+          onClick={handleProfileClick}
+          aria-label="Open account menu"
+          aria-controls={
+            menuOpen
+              ? "finora-account-menu"
+              : undefined
+          }
+          aria-haspopup="true"
+          aria-expanded={
+            menuOpen ? "true" : undefined
+          }
+          className="finora-profile-button"
+        >
           <Avatar
-            alt="User Name"
-            src="https://i.pravatar.cc/150?img=32"
-            sx={{ width: 36, height: 36, cursor: 'pointer' }}
-            onClick={handleClick}
-          />
-          {!!open && <Popper id={id} open={open} anchorEl={anchorEl} style={{ zIndex: 999 }}>
-            <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-              <div onClick={handleLogout}>Logout</div>
-            </Box>
-          </Popper>}
-        </Box>
+            alt="User profile"
+            className="finora-profile-avatar"
+          >
+            U
+          </Avatar>
+        </IconButton>
+
+        {/* ===================================================
+            PROFILE MENU
+        =================================================== */}
+
+        <Menu
+          id="finora-account-menu"
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleProfileClose}
+          onClick={handleProfileClose}
+          transformOrigin={{
+            horizontal: "right",
+            vertical: "top",
+          }}
+          anchorOrigin={{
+            horizontal: "right",
+            vertical: "bottom",
+          }}
+          slotProps={{
+            paper: {
+              className: "finora-account-menu",
+            },
+          }}
+        >
+
+          {/* User */}
+
+          <MenuItem
+            className="finora-account-user"
+            disableRipple
+          >
+            <ListItemIcon>
+              <PersonRounded />
+            </ListItemIcon>
+
+            <ListItemText
+              primary="My Account"
+              secondary="Manage your profile"
+            />
+          </MenuItem>
+
+          <Divider />
+
+          {/* Settings */}
+
+          <MenuItem>
+            <ListItemIcon>
+              <SettingsRounded />
+            </ListItemIcon>
+
+            <ListItemText primary="Settings" />
+          </MenuItem>
+
+          {/* Logout */}
+
+          <MenuItem
+            onClick={handleLogout}
+            className="finora-logout-item"
+          >
+            <ListItemIcon>
+              <LogoutRounded />
+            </ListItemIcon>
+
+            <ListItemText primary="Logout" />
+          </MenuItem>
+
+        </Menu>
+
       </Toolbar>
     </AppBar>
   );
