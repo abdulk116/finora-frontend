@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ArrowForwardRounded, CheckCircleRounded, TrendingUpRounded } from "@mui/icons-material";
+import { Link } from "react-router";
 
 import "./LandingPage.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -63,6 +64,8 @@ const LandingPage = () => {
               className="hero-actions"
             >
               <Button
+                component={Link}
+                to="/login"
                 variant="contained"
                 size="large"
                 endIcon={<ArrowForwardRounded />}
@@ -72,6 +75,8 @@ const LandingPage = () => {
               </Button>
 
               <Button
+                component={Link}
+                to="/login"
                 variant="outlined"
                 size="large"
                 className="secondary-cta"
