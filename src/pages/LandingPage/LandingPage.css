@@ -1,0 +1,795 @@
+.finora-landing {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.landing-background {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-orb {
+  position: absolute;
+
+  border-radius: 50%;
+  filter: blur(90px);
+
+  opacity: 0.45;
+}
+
+.background-orb-one {
+  width: 420px;
+  height: 420px;
+
+  top: -180px;
+  left: -120px;
+
+  background: #dbeafe;
+}
+
+.background-orb-two {
+  width: 500px;
+  height: 500px;
+
+  right: -180px;
+  bottom: -220px;
+
+  background: #ede9fe;
+}
+
+.background-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(148, 163, 184, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.12) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent 80%
+  );
+}
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.landing-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero-section {
+  min-height: 760px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  align-items: center;
+
+  gap: 70px;
+
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+/* =========================================
+   HERO CONTENT
+========================================= */
+
+.hero-content {
+  max-width: 590px;
+}
+
+.hero-chip {
+  height: 34px !important;
+
+  background: rgba(255, 255, 255, 0.8) !important;
+
+  border: 1px solid #e2e8f0;
+
+  color: #475569 !important;
+
+  font-size: 13px !important;
+  font-weight: 600 !important;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05);
+
+  backdrop-filter: blur(12px);
+
+  .MuiChip-icon {
+    color: #22c55e;
+  }
+}
+
+/* =========================================
+   TITLE
+========================================= */
+
+.hero-title {
+  margin-top: 24px !important;
+
+  font-size: clamp(48px, 5vw, 72px) !important;
+
+  line-height: 1.02 !important;
+
+  letter-spacing: -3px !important;
+
+  font-weight: 800 !important;
+
+  color: #0f172a;
+
+  span {
+    display: block;
+
+    color: #4f46e5;
+  }
+}
+
+.hero-description {
+  max-width: 530px;
+
+  margin-top: 22px !important;
+
+  color: #64748b;
+
+  font-size: 18px !important;
+
+  line-height: 1.7 !important;
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.hero-actions {
+  margin-top: 34px;
+}
+
+.primary-cta {
+  height: 52px !important;
+
+  padding: 0 22px !important;
+
+  border-radius: 12px !important;
+
+  background: #4f46e5 !important;
+
+  text-transform: none !important;
+
+  font-size: 15px !important;
+
+  font-weight: 700 !important;
+
+  box-shadow:
+    0 12px 28px rgba(79, 70, 229, 0.25) !important;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease !important;
+
+  &:hover {
+    background: #4338ca !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 16px 32px rgba(79, 70, 229, 0.3) !important;
+  }
+}
+
+.secondary-cta {
+  height: 52px !important;
+
+  padding: 0 22px !important;
+
+  border-radius: 12px !important;
+
+  border-color: #e2e8f0 !important;
+
+  background: rgba(255, 255, 255, 0.8) !important;
+
+  color: #334155 !important;
+
+  text-transform: none !important;
+
+  font-size: 15px !important;
+
+  font-weight: 700 !important;
+
+  &:hover {
+    border-color: #cbd5e1 !important;
+
+    background: white !important;
+  }
+}
+
+/* =========================================
+   TRUST
+========================================= */
+
+.hero-trust {
+  margin-top: 36px;
+}
+
+.trust-avatars {
+  display: flex;
+}
+
+.trust-avatars > div {
+  width: 32px;
+  height: 32px;
+
+  margin-left: -7px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #f8fafc;
+
+  border-radius: 50%;
+
+  background: white;
+
+  color: #4f46e5;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.trust-avatars > div:first-child {
+  margin-left: 0;
+}
+
+.trust-title {
+  color: #334155;
+
+  font-size: 13px !important;
+
+  font-weight: 700 !important;
+}
+
+.trust-description {
+  margin-top: 2px !important;
+
+  color: #94a3b8;
+
+  font-size: 12px !important;
+}
+
+/* =========================================
+   HERO VISUAL
+========================================= */
+
+.hero-visual {
+  position: relative;
+
+  min-height: 520px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard-card {
+  width: min(480px, 100%);
+
+  padding: 28px;
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  box-shadow:
+    0 35px 80px rgba(15, 23, 42, 0.12);
+
+  backdrop-filter: blur(20px);
+
+  transform: rotate(1deg);
+
+  animation:
+    dashboardFloat 6s ease-in-out infinite;
+}
+
+.dashboard-label {
+  color: #94a3b8;
+
+  font-size: 13px !important;
+}
+
+.dashboard-balance {
+  margin-top: 5px !important;
+
+  font-size: 30px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -1px;
+}
+
+.dashboard-menu {
+  min-width: 34px !important;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 9px !important;
+
+  background: #f1f5f9 !important;
+
+  color: #64748b !important;
+}
+
+/* =========================================
+   BALANCE
+========================================= */
+
+.balance-change {
+  margin-top: 12px;
+}
+
+.balance-change svg {
+  width: 17px;
+
+  color: #16a34a;
+}
+
+.balance-change p:first-of-type {
+  color: #16a34a;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.balance-change p:last-of-type {
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+/* =========================================
+   CHART
+========================================= */
+
+.dashboard-chart {
+  position: relative;
+
+  height: 170px;
+
+  margin-top: 30px;
+
+  overflow: hidden;
+
+  background-image:
+    linear-gradient(
+      #e2e8f0 1px,
+      transparent 1px
+    );
+
+  background-size: 100% 42px;
+}
+
+.chart-bars {
+  position: absolute;
+
+  inset: 20px 10px 20px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+}
+
+.chart-bar {
+  width: 7px;
+
+  min-height: 10px;
+
+  border-radius: 20px;
+
+  background: #6366f1;
+
+  transform-origin: bottom;
+
+  animation:
+    chartPulse 3s ease-in-out infinite;
+}
+
+/* =========================================
+   STATS
+========================================= */
+
+.dashboard-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.stat-item {
+  padding: 14px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 11px;
+  }
+
+  strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 15px;
+  }
+}
+
+/* =========================================
+   FLOATING CARDS
+========================================= */
+
+.floating-card {
+  position: absolute;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.12);
+
+  z-index: 3;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 11px;
+  }
+
+  strong {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 17px;
+  }
+
+  small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+  }
+}
+
+.emi-card {
+  top: 75px;
+
+  left: -20px;
+
+  animation:
+    floatingOne 5s ease-in-out infinite;
+}
+
+.floating-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  font-weight: 800;
+}
+
+.loan-card {
+  right: -20px;
+
+  bottom: 75px;
+
+  animation:
+    floatingTwo 5s ease-in-out infinite;
+}
+
+.loan-progress {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background:
+    conic-gradient(
+      #4f46e5 68%,
+      #e2e8f0 68%
+    );
+
+  &::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 6px;
+
+    border-radius: 50%;
+
+    background: white;
+  }
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes dashboardFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(1deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes floatingOne {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes floatingTwo {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes chartPulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.85);
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+
+    gap: 50px;
+
+    padding-top: 70px;
+  }
+
+  .hero-content {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    text-align: center;
+  }
+
+  .hero-description {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-trust {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    min-height: 500px;
+
+    max-width: 600px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .hero-section {
+    min-height: auto;
+
+    padding-top: 55px;
+    padding-bottom: 50px;
+
+    gap: 40px;
+  }
+
+  .hero-title {
+    margin-top: 20px !important;
+
+    font-size: 44px !important;
+
+    letter-spacing: -2px !important;
+  }
+
+  .hero-description {
+    font-size: 16px !important;
+
+    line-height: 1.6 !important;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .primary-cta,
+  .secondary-cta {
+    width: 100%;
+  }
+
+  .hero-visual {
+    min-height: 390px;
+  }
+
+  .dashboard-card {
+    padding: 20px;
+
+    border-radius: 20px;
+  }
+
+  .dashboard-balance {
+    font-size: 24px !important;
+  }
+
+  .dashboard-chart {
+    height: 130px;
+  }
+
+  .dashboard-stats {
+    gap: 6px;
+  }
+
+  .stat-item {
+    padding: 10px;
+
+    strong {
+      font-size: 13px;
+    }
+  }
+
+  .floating-card {
+    transform: scale(0.82);
+  }
+
+  .emi-card {
+    top: 15px;
+
+    left: -12px;
+  }
+
+  .loan-card {
+    right: -12px;
+
+    bottom: 15px;
+  }
+
+  .background-orb-one {
+    width: 280px;
+    height: 280px;
+  }
+
+  .background-orb-two {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 38px !important;
+  }
+
+  .hero-visual {
+    min-height: 350px;
+  }
+
+  .floating-card {
+    transform: scale(0.72);
+  }
+
+  .emi-card {
+    left: -25px;
+  }
+
+  .loan-card {
+    right: -25px;
+  }
+}

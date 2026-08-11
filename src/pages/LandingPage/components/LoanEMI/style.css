@@ -1,0 +1,735 @@
+.loan-emi-section {
+  position: relative;
+
+  padding: 130px 0;
+
+  overflow: hidden;
+
+  background: #ffffff;
+}
+
+.loan-emi-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  right: -250px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  border-radius: 50%;
+
+  background: #eef2ff;
+
+  filter: blur(100px);
+
+  opacity: 0.65;
+
+  pointer-events: none;
+}
+
+.loan-emi-container {
+  position: relative;
+
+  z-index: 1;
+}
+
+/* =========================================
+   GRID
+========================================= */
+
+.loan-emi-grid {
+  display: grid;
+
+  grid-template-columns:
+    0.85fr 1.15fr;
+
+  align-items: center;
+
+  gap: 90px;
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.loan-emi-content {
+  max-width: 500px;
+}
+
+.loan-emi-chip {
+  background: #eef2ff !important;
+
+  color: #4f46e5 !important;
+
+  font-size: 11px !important;
+
+  font-weight: 700 !important;
+}
+
+.loan-emi-title {
+  margin-top: 22px !important;
+
+  color: #0f172a;
+
+  font-size: clamp(38px, 4vw, 54px) !important;
+
+  line-height: 1.08 !important;
+
+  letter-spacing: -2px !important;
+
+  font-weight: 800 !important;
+
+  span {
+    display: block;
+
+    color: #4f46e5;
+  }
+}
+
+.loan-emi-description {
+  margin-top: 20px !important;
+
+  color: #64748b;
+
+  font-size: 16px !important;
+
+  line-height: 1.75 !important;
+}
+
+/* =========================================
+   BENEFITS
+========================================= */
+
+.loan-benefits {
+  margin-top: 34px;
+}
+
+.loan-benefit {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 13px;
+}
+
+.benefit-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  svg {
+    width: 17px;
+  }
+}
+
+.loan-benefit p {
+  color: #334155;
+
+  font-size: 13px !important;
+
+  font-weight: 700 !important;
+}
+
+.loan-benefit span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+.loan-emi-link {
+  margin-top: 32px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #4f46e5;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+/* =========================================
+   PREVIEW WRAPPER
+========================================= */
+
+.loan-preview-wrapper {
+  position: relative;
+
+  min-height: 570px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+/* =========================================
+   MAIN LOAN CARD
+========================================= */
+
+.loan-preview-card {
+  position: relative;
+
+  width: min(500px, 100%);
+
+  padding: 28px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 24px;
+
+  background: white;
+
+  box-shadow:
+    0 30px 70px rgba(15, 23, 42, 0.12);
+
+  z-index: 2;
+
+  animation:
+    loanCardFloat 6s ease-in-out infinite;
+}
+
+.loan-preview-label {
+  color: #94a3b8;
+
+  font-size: 11px !important;
+}
+
+.loan-preview-name {
+  margin-top: 4px !important;
+
+  color: #0f172a;
+
+  font-size: 17px !important;
+
+  font-weight: 750 !important;
+}
+
+.loan-bank-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  svg {
+    width: 21px;
+  }
+}
+
+/* =========================================
+   AMOUNT
+========================================= */
+
+.loan-amount-section {
+  margin-top: 35px;
+
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 11px;
+  }
+}
+
+.loan-amount {
+  margin-top: 5px !important;
+
+  color: #0f172a;
+
+  font-size: 32px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -1px;
+}
+
+.loan-change {
+  margin-top: 7px;
+
+  svg {
+    width: 14px;
+
+    color: #16a34a;
+  }
+
+  p {
+    color: #16a34a;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================================
+   PROGRESS
+========================================= */
+
+.loan-progress-section {
+  margin-top: 25px;
+
+  > .MuiStack-root:first-child {
+    p {
+      color: #64748b;
+
+      font-size: 11px;
+    }
+
+    strong {
+      color: #4f46e5;
+
+      font-size: 12px;
+    }
+  }
+}
+
+.main-loan-progress {
+  height: 9px !important;
+
+  margin-top: 10px;
+
+  border-radius: 20px;
+
+  background: #eef2ff !important;
+
+  .MuiLinearProgress-bar {
+    border-radius: 20px;
+
+    background: #4f46e5;
+  }
+}
+
+.loan-progress-meta {
+  margin-top: 7px;
+
+  span {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+}
+/* =========================================
+   EMI INFO
+========================================= */
+
+.loan-emi-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-top: 25px;
+}
+
+.loan-emi-info > div {
+  padding: 13px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+
+  strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #334155;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   UPCOMING EMI
+========================================= */
+
+.upcoming-emi-card {
+  position: absolute;
+
+  right: -25px;
+  top: 65px;
+
+  width: 260px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.13);
+
+  backdrop-filter: blur(15px);
+
+  z-index: 4;
+
+  animation:
+    upcomingFloat 5s ease-in-out infinite;
+}
+
+.upcoming-emi-date {
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #eef2ff;
+
+  strong {
+    color: #4f46e5;
+
+    font-size: 15px;
+  }
+
+  span {
+    color: #818cf8;
+
+    font-size: 8px;
+
+    font-weight: 700;
+  }
+}
+
+.upcoming-emi-details {
+  flex: 1;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+
+  strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #334155;
+
+    font-size: 15px;
+  }
+
+  span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+  }
+}
+
+.upcoming-emi-check {
+  svg {
+    width: 19px;
+
+    color: #22c55e;
+  }
+}
+
+/* =========================================
+   TIMELINE
+========================================= */
+
+.loan-timeline {
+  position: absolute;
+
+  left: 20px;
+  bottom: 35px;
+
+  width: 210px;
+
+  padding: 18px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.1);
+
+  z-index: 4;
+}
+
+.timeline-line {
+  position: absolute;
+
+  left: 28px;
+  top: 27px;
+  bottom: 27px;
+
+  width: 1px;
+
+  background: #e2e8f0;
+}
+
+.timeline-step {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-height: 38px;
+
+  z-index: 2;
+
+  span {
+    width: 9px;
+    height: 9px;
+
+    flex-shrink: 0;
+
+    margin-left: 5px;
+
+    border-radius: 50%;
+
+    background: #cbd5e1;
+
+    border: 2px solid white;
+  }
+
+  p {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+}
+
+.timeline-step.completed {
+  span {
+    background: #4f46e5;
+  }
+
+  p {
+    color: #475569;
+
+    font-weight: 700;
+  }
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes loanCardFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes upcomingFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+  .loan-emi-section {
+    padding: 100px 0;
+  }
+
+  .loan-emi-grid {
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+  }
+
+  .loan-emi-content {
+    max-width: 700px;
+
+    text-align: center;
+
+    margin: 0 auto;
+  }
+
+  .loan-benefit {
+    text-align: left;
+  }
+
+  .loan-emi-link {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .loan-preview-wrapper {
+    max-width: 600px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .loan-emi-section {
+    padding: 80px 0;
+  }
+
+  .loan-emi-title {
+    font-size: 35px !important;
+
+    letter-spacing: -1.5px !important;
+  }
+
+  .loan-emi-description {
+    font-size: 15px !important;
+  }
+
+  .loan-preview-wrapper {
+    min-height: 470px;
+  }
+
+  .loan-preview-card {
+    padding: 20px;
+
+    border-radius: 20px;
+  }
+
+  .loan-amount {
+    font-size: 27px !important;
+  }
+
+  .loan-emi-info {
+    gap: 6px;
+  }
+
+  .loan-emi-info > div {
+    padding: 10px;
+
+    strong {
+      font-size: 10px;
+    }
+  }
+
+  .upcoming-emi-card {
+    right: -10px;
+    top: 30px;
+
+    width: 220px;
+
+    transform: scale(0.9);
+  }
+
+  .loan-timeline {
+    left: -5px;
+    bottom: 10px;
+
+    transform: scale(0.85);
+    transform-origin: bottom left;
+  }
+}
+
+@media (max-width: 400px) {
+  .loan-preview-wrapper {
+    min-height: 430px;
+  }
+
+  .upcoming-emi-card {
+    right: -25px;
+
+    transform: scale(0.78);
+  }
+
+  .loan-timeline {
+    transform: scale(0.72);
+  }
+}
+

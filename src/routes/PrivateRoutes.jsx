@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
 import Dashboard from "../pages/Dashboard/Dashboard";
 import AppLayout from "../layouts/AppLayout";
 import AddLoan from "../pages/LoanManagement/components/AddLoan/AddLoan";
@@ -17,6 +17,9 @@ const PrivateRoutes = () => {
         <Route path="/loan/add" element={< AddLoan/>} />
         <Route path="/emi-list" element={< EmiManagement/>} />
         <Route path="/expenses" element={< MonthlyExpenses/>} />
+
+        {/* ===================================== FALLBACK ===================================== */}
+      <Route path="*" element={ <Navigate to="/" replace /> } />
       </Routes>
     </AppLayout>
   )
