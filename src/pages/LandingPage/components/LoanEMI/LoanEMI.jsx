@@ -15,7 +15,7 @@ import {
   TrendingDownRounded
 } from "@mui/icons-material";
 
-import "./LoanEMI.css";
+import "./style.css";
 
 const LoanEMI = () => {
   return (
