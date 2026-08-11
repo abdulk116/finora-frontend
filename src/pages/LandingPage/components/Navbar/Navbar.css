@@ -276,11 +276,11 @@
 
 @media (max-width: 900px) {
   .desktop-nav {
-    display: none;
+    display: none !important;
   }
 
   .desktop-actions {
-    display: none;
+    display: none !important;
   }
 
   .mobile-menu-button {
