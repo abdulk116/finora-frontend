@@ -1,20 +1,16 @@
-import { useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import LoginAuth from '../pages/Auth/LoginAuth';
+import LandingPage from '../pages/LandingPage/LandingPage';
 
 const PublicRoutes = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (location?.pathname !== "/login") {
-      navigate("/login");
-    }
-  }, [])
   
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginAuth />} />
+
+      {/* ===================================== FALLBACK ===================================== */}
+      <Route path="*" element={ <Navigate to="/" replace /> } />
     </Routes>
   )
 }

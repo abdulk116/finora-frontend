@@ -1,0 +1,906 @@
+.dashboard-preview-section {
+  position: relative;
+
+  padding: 120px 0;
+
+  background: #ffffff;
+}
+
+.dashboard-preview-container {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+}
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.dashboard-section-heading {
+  max-width: 720px;
+
+  margin: 0 auto 60px;
+
+  text-align: center;
+}
+
+.dashboard-heading-chip {
+  background: #eef2ff !important;
+
+  color: #4f46e5 !important;
+
+  border: none !important;
+
+  font-weight: 700 !important;
+
+  font-size: 12px !important;
+}
+
+.dashboard-heading-title {
+  margin-top: 20px !important;
+
+  font-size: clamp(36px, 4vw, 52px) !important;
+
+  line-height: 1.1 !important;
+
+  letter-spacing: -2px !important;
+
+  font-weight: 800 !important;
+
+  color: #0f172a;
+
+  span {
+    display: block;
+
+    color: #4f46e5;
+  }
+}
+
+.dashboard-heading-description {
+  max-width: 650px;
+
+  margin: 20px auto 0 !important;
+
+  color: #64748b;
+
+  font-size: 17px !important;
+
+  line-height: 1.7 !important;
+}
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.preview-dashboard {
+  padding: 28px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 28px;
+
+  background: #f8fafc;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.preview-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.preview-greeting {
+  color: #64748b;
+
+  font-size: 13px !important;
+}
+
+.preview-user-name {
+  margin-top: 4px !important;
+
+  color: #0f172a;
+
+  font-size: 17px !important;
+
+  font-weight: 700 !important;
+}
+
+.preview-date {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 9px 13px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 10px;
+
+  background: white;
+
+  color: #64748b;
+
+  svg {
+    width: 17px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   BALANCE CARDS
+========================================= */
+
+.balance-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.4fr 1fr 1fr;
+
+  gap: 14px;
+}
+
+.balance-card {
+  min-height: 150px;
+
+  padding: 20px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 18px;
+
+  background: white;
+}
+
+.primary-balance {
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #6366f1
+    );
+
+  border-color: transparent;
+
+  color: white;
+
+  .balance-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .balance-value {
+    color: white;
+  }
+
+  .balance-growth {
+    color: white;
+
+    span {
+      color: rgba(255, 255, 255, 0.65);
+    }
+  }
+}
+
+.balance-label {
+  color: #94a3b8;
+
+  font-size: 11px !important;
+}
+
+.balance-value {
+  margin-top: 7px !important;
+
+  font-size: 25px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -0.5px;
+}
+
+.balance-icon,
+.income-icon,
+.expense-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  svg {
+    width: 19px;
+  }
+}
+
+.balance-icon {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.income-icon {
+  background: #ecfdf5;
+
+  color: #16a34a;
+}
+
+.expense-icon {
+  background: #fef2f2;
+
+  color: #ef4444;
+}
+
+.balance-growth {
+  margin-top: 18px;
+
+  svg {
+    width: 15px;
+
+    color: #4ade80;
+  }
+
+  p {
+    color: #4ade80;
+
+    font-size: 12px;
+
+    font-weight: 700;
+  }
+
+  span {
+    font-size: 11px;
+  }
+}
+
+.balance-subtitle {
+  margin-top: 18px !important;
+
+  color: #94a3b8;
+
+  font-size: 11px !important;
+}
+
+/* =========================================
+   DASHBOARD GRID
+========================================= */
+
+.dashboard-content-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.6fr 1fr;
+
+  gap: 14px;
+
+  margin-top: 14px;
+}
+
+.dashboard-bottom-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 14px;
+
+  margin-top: 14px;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.dashboard-panel {
+  padding: 22px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 18px;
+
+  background: white;
+}
+
+.panel-title {
+  color: #0f172a;
+
+  font-size: 14px !important;
+
+  font-weight: 750 !important;
+}
+
+.panel-subtitle {
+  margin-top: 3px !important;
+
+  color: #94a3b8;
+
+  font-size: 11px !important;
+}
+
+.panel-filter {
+  background: #f8fafc !important;
+
+  color: #64748b !important;
+
+  font-size: 10px !important;
+}
+
+.panel-icon {
+  color: #6366f1;
+
+  font-size: 21px !important;
+}
+
+/* =========================================
+   CASH FLOW
+========================================= */
+
+.cashflow-chart {
+  height: 230px;
+
+  display: flex;
+
+  margin-top: 24px;
+}
+
+.chart-y-axis {
+  width: 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  padding-bottom: 30px;
+
+  color: #94a3b8;
+
+  font-size: 9px;
+}
+
+.chart-area {
+  position: relative;
+
+  flex: 1;
+
+  margin-left: 8px;
+}
+
+.chart-grid-line {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  border-top: 1px dashed #e2e8f0;
+}
+
+.line-one {
+  top: 0;
+}
+
+.line-two {
+  top: 33%;
+}
+
+.line-three {
+  top: 66%;
+}
+
+.line-four {
+  bottom: 30px;
+}
+
+/* =========================================
+   FAKE CHART LINES
+========================================= */
+
+.income-line,
+.expense-line {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  bottom: 30px;
+
+  height: 165px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-around;
+}
+
+.income-line span,
+.expense-line span {
+  width: 8px;
+
+  border-radius: 20px;
+
+  transform-origin: bottom;
+}
+
+.income-line span {
+  background: #6366f1;
+}
+
+.expense-line span {
+  background: #c4b5fd;
+}
+
+.income-line span:nth-child(1) {
+  height: 55%;
+}
+
+.income-line span:nth-child(2) {
+  height: 70%;
+}
+
+.income-line span:nth-child(3) {
+  height: 58%;
+}
+
+.income-line span:nth-child(4) {
+  height: 82%;
+}
+
+.income-line span:nth-child(5) {
+  height: 68%;
+}
+
+.income-line span:nth-child(6) {
+  height: 90%;
+}
+
+.income-line span:nth-child(7) {
+  height: 100%;
+}
+
+.expense-line span:nth-child(1) {
+  height: 35%;
+}
+
+.expense-line span:nth-child(2) {
+  height: 44%;
+}
+
+.expense-line span:nth-child(3) {
+  height: 40%;
+}
+
+.expense-line span:nth-child(4) {
+  height: 55%;
+}
+
+.expense-line span:nth-child(5) {
+  height: 48%;
+}
+
+.expense-line span:nth-child(6) {
+  height: 62%;
+}
+
+.chart-labels {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+
+  justify-content: space-around;
+
+  color: #94a3b8;
+
+  font-size: 9px;
+}
+
+.chart-legend {
+  margin-top: 10px;
+
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+.chart-legend > div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+}
+
+.chart-legend span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+}
+
+.legend-income {
+  background: #6366f1;
+}
+
+.legend-expense {
+  background: #c4b5fd;
+}
+
+/* =========================================
+   LOAN
+========================================= */
+
+.loan-total {
+  margin-top: 28px;
+
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  p {
+    color: #94a3b8;
+
+    font-size: 10px;
+  }
+
+  strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #0f172a;
+
+    font-size: 22px;
+  }
+}
+
+.loan-items {
+  margin-top: 22px;
+}
+
+.loan-items > div > .MuiStack-root {
+  p {
+    color: #475569;
+
+    font-size: 11px;
+  }
+
+  strong {
+    color: #334155;
+
+    font-size: 11px;
+  }
+}
+
+.loan-progress-bar {
+  height: 6px !important;
+
+  margin-top: 9px;
+
+  border-radius: 10px;
+
+  background: #eef2ff !important;
+
+  .MuiLinearProgress-bar {
+    border-radius: 10px;
+
+    background: #6366f1;
+  }
+}
+
+.loan-meta {
+  margin-top: 5px !important;
+
+  color: #94a3b8;
+
+  font-size: 9px !important;
+}
+
+/* =========================================
+   EMI
+========================================= */
+
+.emi-count {
+  background: #eef2ff !important;
+
+  color: #4f46e5 !important;
+
+  font-size: 9px !important;
+}
+
+.emi-list {
+  margin-top: 22px;
+}
+
+.emi-item {
+  display: grid;
+
+  grid-template-columns:
+    45px 1fr auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 0;
+}
+
+.emi-date {
+  width: 42px;
+
+  height: 42px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eef2ff;
+
+  strong {
+    color: #4f46e5;
+
+    font-size: 15px;
+  }
+
+  span {
+    color: #818cf8;
+
+    font-size: 8px;
+
+    font-weight: 700;
+  }
+}
+
+.emi-info {
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: #334155;
+
+    font-size: 11px;
+  }
+
+  span {
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+}
+
+.emi-amount {
+  color: #334155;
+
+  font-size: 12px;
+}
+
+/* =========================================
+   TRANSACTIONS
+========================================= */
+
+.transaction-list {
+  margin-top: 15px;
+}
+
+.transaction-item {
+  display: grid;
+
+  grid-template-columns:
+    34px 1fr auto;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 0;
+}
+
+.transaction-icon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  svg {
+    width: 15px;
+  }
+}
+
+.transaction-icon.income {
+  background: #ecfdf5;
+
+  color: #16a34a;
+}
+
+.transaction-icon.expense {
+  background: #fef2f2;
+
+  color: #ef4444;
+}
+
+.transaction-info {
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: #334155;
+
+    font-size: 11px;
+  }
+
+  span {
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+}
+
+.transaction-income {
+  color: #16a34a;
+
+  font-size: 11px;
+}
+
+.transaction-expense {
+  color: #ef4444;
+
+  font-size: 11px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .dashboard-preview-section {
+    padding: 90px 0;
+  }
+
+  .balance-grid {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .primary-balance {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .dashboard-preview-section {
+    padding: 70px 0;
+  }
+
+  .dashboard-preview-container {
+    width: calc(100% - 32px);
+  }
+
+  .dashboard-section-heading {
+    margin-bottom: 35px;
+  }
+
+  .dashboard-heading-title {
+    font-size: 34px !important;
+
+    letter-spacing: -1.5px !important;
+  }
+
+  .dashboard-heading-description {
+    font-size: 15px !important;
+  }
+
+  .preview-dashboard {
+    padding: 14px;
+
+    border-radius: 20px;
+  }
+
+  .preview-header {
+    align-items: flex-start;
+  }
+
+  .preview-date {
+    padding: 7px;
+
+    p {
+      display: none;
+    }
+  }
+
+  .balance-grid {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+  }
+
+  .primary-balance {
+    grid-column: auto;
+  }
+
+  .balance-card {
+    min-height: 130px;
+
+    padding: 16px;
+  }
+
+  .balance-value {
+    font-size: 22px !important;
+  }
+
+  .dashboard-panel {
+    padding: 16px;
+  }
+
+  .cashflow-chart {
+    height: 190px;
+  }
+
+  .income-line,
+  .expense-line {
+    height: 130px;
+  }
+
+  .emi-item {
+    grid-template-columns:
+      42px 1fr auto;
+
+    gap: 8px;
+  }
+
+  .transaction-item {
+    grid-template-columns:
+      32px 1fr auto;
+
+    gap: 8px;
+  }
+}

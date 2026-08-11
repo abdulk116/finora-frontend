@@ -1,0 +1,726 @@
+.money-flow-section {
+  position: relative;
+
+  padding: 120px 0;
+
+  overflow: hidden;
+
+  background: #f8fafc;
+}
+
+.money-flow-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  left: -220px;
+  top: 30%;
+
+  border-radius: 50%;
+
+  background: #eef2ff;
+
+  filter: blur(100px);
+
+  opacity: 0.8;
+
+  pointer-events: none;
+}
+
+.money-flow-container {
+  position: relative;
+
+  z-index: 1;
+}
+
+/* =========================================
+   HEADING
+========================================= */
+
+.money-flow-heading {
+  max-width: 720px;
+
+  margin: 0 auto 60px;
+
+  text-align: center;
+}
+
+.money-flow-chip {
+  background: #eef2ff !important;
+
+  color: #4f46e5 !important;
+
+  font-size: 11px !important;
+
+  font-weight: 700 !important;
+}
+
+.money-flow-title {
+  margin-top: 20px !important;
+
+  color: #0f172a;
+
+  font-size: clamp(36px, 4vw, 52px) !important;
+
+  line-height: 1.1 !important;
+
+  letter-spacing: -2px !important;
+
+  font-weight: 800 !important;
+
+  span {
+    display: block;
+
+    color: #4f46e5;
+  }
+}
+
+.money-flow-description {
+  max-width: 650px;
+
+  margin: 20px auto 0 !important;
+
+  color: #64748b;
+
+  font-size: 16px !important;
+
+  line-height: 1.7 !important;
+}
+
+/* =========================================
+   GRID
+========================================= */
+
+.money-flow-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 16px;
+}
+
+/* =========================================
+   COMMON CARD
+========================================= */
+
+.money-card {
+  position: relative;
+
+  min-height: 330px;
+
+  padding: 26px;
+
+  overflow: hidden;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 22px;
+
+  background: white;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.03);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+      0 20px 45px rgba(15, 23, 42, 0.08);
+  }
+}
+
+.money-card-label {
+  color: #94a3b8;
+
+  font-size: 10px !important;
+
+  font-weight: 600 !important;
+}
+
+.money-card-title {
+  margin-top: 5px !important;
+
+  color: #0f172a;
+
+  font-size: 22px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -0.5px;
+}
+
+.money-card-title.small-title {
+  font-size: 17px !important;
+}
+
+.money-card-subtitle {
+  margin-top: 4px !important;
+
+  color: #94a3b8;
+
+  font-size: 9px !important;
+}
+
+/* =========================================
+   ACCOUNT CARD
+========================================= */
+
+.money-card-main-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  svg {
+    width: 21px;
+  }
+}
+
+.account-list {
+  margin-top: 23px;
+}
+
+.account-item {
+  display: grid;
+
+  grid-template-columns:
+    36px 1fr auto;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px;
+
+  border-radius: 11px;
+
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f8fafc;
+  }
+}
+
+.account-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #f8fafc;
+
+  color: #6366f1;
+
+  svg {
+    width: 17px;
+  }
+}
+
+.account-details {
+  p {
+    color: #334155;
+
+    font-size: 11px !important;
+
+    font-weight: 700 !important;
+  }
+
+  span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+  }
+}
+
+.account-item > strong {
+  color: #334155;
+
+  font-size: 11px;
+}
+
+/* =========================================
+   CARD LINK
+========================================= */
+
+.money-card-link {
+  position: absolute;
+
+  left: 26px;
+  right: 26px;
+  bottom: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #4f46e5;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  svg {
+    width: 15px;
+
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+/* =========================================
+   INCOME CARD
+========================================= */
+
+.income-card {
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8fafc
+    );
+}
+
+.income-card-background {
+  position: absolute;
+
+  right: -20px;
+  top: -20px;
+
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ecfdf5;
+
+  color: #22c55e;
+
+  opacity: 0.8;
+
+  svg {
+    width: 45px;
+
+    margin-left: -20px;
+
+    margin-top: 20px;
+  }
+}
+
+.income-total {
+  margin-top: 12px !important;
+
+  color: #0f172a;
+
+  font-size: 34px !important;
+
+  font-weight: 800 !important;
+
+  letter-spacing: -1px;
+}
+
+.income-growth {
+  margin-top: 6px;
+
+  svg {
+    width: 14px;
+
+    color: #16a34a;
+  }
+
+  p {
+    color: #16a34a;
+
+    font-size: 10px;
+
+    font-weight: 700;
+  }
+
+  span {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+}
+
+.money-divider {
+  margin: 22px 0 !important;
+
+  border-color: #f1f5f9 !important;
+}
+
+.income-source {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 7px 0;
+}
+
+.income-source p {
+  color: #475569;
+
+  font-size: 10px !important;
+
+  font-weight: 700 !important;
+}
+
+.income-source span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #94a3b8;
+
+  font-size: 8px;
+}
+
+.income-source > strong {
+  color: #16a34a;
+
+  font-size: 11px;
+}
+
+/* =========================================
+   EXPENSE CARD
+========================================= */
+
+.expense-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #fef2f2;
+
+  color: #ef4444;
+
+  svg {
+    width: 20px;
+  }
+}
+
+.expense-total {
+  margin-top: 5px !important;
+
+  color: #0f172a;
+
+  font-size: 26px !important;
+
+  font-weight: 800 !important;
+}
+
+.expense-chart {
+  height: 145px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-around;
+
+  gap: 15px;
+
+  margin-top: 22px;
+
+  padding: 0 10px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.expense-chart-bar {
+  height: 100%;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 7px;
+
+  span {
+    display: block;
+
+    width: 25px;
+
+    max-height: 110px;
+
+    border-radius: 7px 7px 2px 2px;
+
+    background:
+      linear-gradient(
+        to top,
+        #6366f1,
+        #a5b4fc
+      );
+
+    transition:
+      height 0.4s ease,
+      transform 0.3s ease;
+
+    &:hover {
+      transform: scaleX(1.08);
+    }
+  }
+
+  label {
+    color: #94a3b8;
+
+    font-size: 8px;
+  }
+}
+
+.expense-summary {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 14px;
+
+  span {
+    color: #94a3b8;
+
+    font-size: 9px;
+  }
+
+  strong {
+    color: #475569;
+
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   TRANSACTIONS
+========================================= */
+
+.today-chip {
+  background: #f8fafc !important;
+
+  color: #64748b !important;
+
+  font-size: 9px !important;
+}
+
+.money-transactions {
+  margin-top: 20px;
+}
+
+.money-transaction {
+  display: grid;
+
+  grid-template-columns:
+    34px 1fr auto;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 0;
+}
+
+.transaction-money-icon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  svg {
+    width: 15px;
+  }
+}
+
+.transaction-money-icon.income {
+  background: #ecfdf5;
+
+  color: #16a34a;
+}
+
+.transaction-money-icon.expense {
+  background: #fef2f2;
+
+  color: #ef4444;
+}
+
+.money-transaction-details {
+  p {
+    color: #334155;
+
+    font-size: 10px !important;
+
+    font-weight: 700 !important;
+  }
+
+  span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+  }
+}
+
+.money-transaction > strong {
+  font-size: 10px;
+}
+
+.money-transaction > strong.income {
+  color: #16a34a;
+}
+
+.money-transaction > strong.expense {
+  color: #ef4444;
+}
+
+/* =========================================
+   BOTTOM
+========================================= */
+
+.money-flow-bottom {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 45px;
+
+  color: #94a3b8;
+
+  p {
+    font-size: 11px !important;
+  }
+}
+
+.money-flow-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #6366f1;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+  .money-flow-section {
+    padding: 95px 0;
+  }
+
+  .money-flow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .money-flow-section {
+    padding: 80px 0;
+  }
+
+  .money-flow-heading {
+    margin-bottom: 40px;
+  }
+
+  .money-flow-title {
+    font-size: 34px !important;
+
+    letter-spacing: -1.5px !important;
+  }
+
+  .money-flow-description {
+    font-size: 15px !important;
+  }
+
+  .money-card {
+    min-height: 310px;
+
+    padding: 20px;
+  }
+
+  .money-card-link {
+    left: 20px;
+    right: 20px;
+  }
+
+  .income-total {
+    font-size: 30px !important;
+  }
+
+  .expense-chart {
+    gap: 8px;
+
+    padding: 0 5px;
+  }
+
+  .expense-chart-bar {
+    span {
+      width: 20px;
+    }
+  }
+}
