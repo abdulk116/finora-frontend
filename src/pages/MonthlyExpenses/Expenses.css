@@ -18,33 +18,103 @@
    ========================================================================== */
 
 .finora-expenses-header {
+  width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 24px;
 
-  gap: 20px;
+  margin-bottom: 24px;
 
-  margin-bottom: 22px;
+  box-sizing: border-box;
 }
+
+
+/* ============================================================
+   HEADER CONTENT
+   ============================================================ */
+
+.finora-expenses-header-content {
+  flex: 1;
+  min-width: 0;
+}
+
 
 .finora-expenses-title {
+  margin: 0 !important;
+
+  font-size: 2rem !important;
+  line-height: 1.2 !important;
+
   font-weight: 800 !important;
-  letter-spacing: -0.02em;
+
+  color: var(--finora-text-primary);
 }
 
+
+.finora-expenses-description {
+  max-width: 520px;
+
+  margin-top: 6px !important;
+
+  line-height: 1.5 !important;
+}
+
+
+/* ============================================================
+   ADD EXPENSE BUTTON
+   ============================================================ */
+
 .finora-expenses-add-button {
+  flex-shrink: 0;
+
   min-height: 42px;
+  min-width: 142px;
+
+  padding: 9px 16px !important;
 
   border-radius: 10px !important;
 
-  padding-left: 18px !important;
-  padding-right: 18px !important;
-
   text-transform: none !important;
+
+  font-size: 0.875rem !important;
   font-weight: 700 !important;
 
+  white-space: nowrap !important;
+
   box-shadow:
-    0 4px 12px rgba(25, 118, 210, 0.18) !important;
+    0 4px 12px rgba(79, 70, 229, 0.20) !important;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease !important;
+}
+
+
+.finora-expenses-add-button:hover {
+  box-shadow:
+    0 6px 16px rgba(79, 70, 229, 0.25) !important;
+
+  transform: translateY(-1px);
+}
+
+
+.finora-expenses-add-button:active {
+  transform: scale(0.98);
+}
+
+
+/* ============================================================
+   SHORT BUTTON TEXT
+   ============================================================ */
+
+.finora-add-expense-short-text {
+  display: none;
+}
+
+
+.finora-add-expense-text {
+  display: inline;
 }
 
 
@@ -368,16 +438,14 @@
 
 .finora-expense-mobile-list {
   width: 100%;
-
   display: flex;
-
   flex-direction: column;
-
   gap: 12px;
 
   padding: 14px;
-
   box-sizing: border-box;
+
+  background: #f8fafc;
 }
 
 
@@ -723,94 +791,81 @@
 
 @media (max-width: 767px) {
 
-  .finora-expenses-page {
-    width: 100%;
+  /* ============================================================
+     EXPENSE TABLE → MOBILE CARDS
+     ============================================================ */
 
-    padding-top: 14px;
-    padding-bottom: 24px;
-
-    padding-left: 10px;
-    padding-right: 10px;
+  .finora-expense-desktop {
+    display: none !important;
   }
 
+  .finora-expense-mobile {
+    display: block !important;
+    width: 100%;
+  }
 
-  /* ---------------------------------------------------------------------- */
-  /* Header                                                                */
-  /* ---------------------------------------------------------------------- */
+  /* ============================================================
+     HEADER
+     ============================================================ */
 
   .finora-expenses-header {
     align-items: flex-start;
-
-    margin-bottom: 16px;
-
     gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .finora-expenses-header-content {
+    min-width: 0;
   }
 
   .finora-expenses-title {
     font-size: 1.65rem !important;
+    line-height: 1.15 !important;
   }
 
-  .finora-expenses-header .MuiTypography-body2 {
-    margin-top: 3px;
-
-    line-height: 1.45;
+  .finora-expenses-description {
+    margin-top: 6px !important;
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+    max-width: 100%;
   }
+
+  /* ============================================================
+     ADD EXPENSE BUTTON
+     ============================================================ */
 
   .finora-expenses-add-button {
-    min-width: 42px !important;
-    width: 42px;
-    height: 42px;
-
-    padding: 0 !important;
-
+    min-width: 82px;
+    min-height: 40px;
+    padding: 8px 12px !important;
+    border-radius: 9px !important;
+    font-size: 0.78rem !important;
     flex-shrink: 0;
-
-    border-radius: 11px !important;
+    white-space: nowrap !important;
   }
 
   .finora-expenses-add-button .MuiButton-startIcon {
-    margin: 0 !important;
+    margin-right: 4px;
+    margin-left: 0;
   }
 
-  .finora-expenses-add-button .MuiButton-startIcon+* {
+  .finora-add-expense-text {
     display: none;
   }
 
-
-  /* ---------------------------------------------------------------------- */
-  /* Summary                                                               */
-  /* ---------------------------------------------------------------------- */
-
-  .finora-expense-summary-grid {
-    margin-bottom: 14px;
+  .finora-add-expense-short-text {
+    display: inline;
   }
 
-
-  /* ---------------------------------------------------------------------- */
-  /* Main Card                                                             */
-  /* ---------------------------------------------------------------------- */
-
-  .finora-expense-main-card {
-    border-radius: 14px !important;
-  }
-
-
-  /* ---------------------------------------------------------------------- */
-  /* Toolbar                                                               */
-  /* ---------------------------------------------------------------------- */
+  /* ============================================================
+     TOOLBAR
+     ============================================================ */
 
   .finora-expense-toolbar {
-    padding: 16px;
-
-    align-items: flex-start;
-
     flex-direction: column;
-
+    align-items: stretch;
     gap: 12px;
-  }
-
-  .finora-expense-toolbar .MuiTypography-h6 {
-    font-size: 1rem;
+    padding: 16px;
   }
 
   .finora-expense-view-controls {
@@ -823,93 +878,36 @@
 
   .finora-expense-view-toggle .MuiToggleButton-root {
     flex: 1;
-
-    justify-content: center;
-
-    padding: 7px 10px;
   }
 
-
-  /* ---------------------------------------------------------------------- */
-  /* Filters                                                               */
-  /* ---------------------------------------------------------------------- */
+  /* ============================================================
+     FILTERS
+     ============================================================ */
 
   .finora-expense-filters {
-    display: grid;
-
-    grid-template-columns:
-      minmax(0, 1fr) minmax(0, 1fr);
-
-    gap: 9px;
-
-    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 16px;
   }
 
   .finora-expense-search {
-    grid-column: 1 / -1;
-
     width: 100%;
-
     min-width: 0;
   }
 
   .finora-expense-status-filter {
     width: 100%;
-
     min-width: 0;
   }
 
   .finora-expense-date-filter {
     width: 100%;
-
-    min-width: 0;
-  }
-
-  .finora-expense-date-filter>* {
-    width: 100%;
   }
 
   .finora-refresh-button {
-    grid-column: 1 / -1;
-
-    width: 100%;
-
-    min-height: 40px;
-
-    justify-content: center;
-  }
-
-
-  /* ---------------------------------------------------------------------- */
-  /* Hide Desktop Table                                                    */
-  /* ---------------------------------------------------------------------- */
-
-  .finora-expense-desktop {
-    display: none !important;
-  }
-
-
-  /* ---------------------------------------------------------------------- */
-  /* Show Mobile Cards                                                     */
-  /* ---------------------------------------------------------------------- */
-
-  .finora-expense-mobile {
-    display: block !important;
-
-    width: 100%;
-
-    min-width: 0;
-  }
-
-
-  /* ---------------------------------------------------------------------- */
-  /* Mobile Card                                                            */
-  /* ---------------------------------------------------------------------- */
-
-  .finora-expense-mobile-card {
     width: 100%;
   }
-
 }
 
 

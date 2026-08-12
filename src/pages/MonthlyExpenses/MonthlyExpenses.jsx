@@ -856,7 +856,9 @@ export default function MonthlyExpenses() {
 
       <Box className="finora-expenses-header">
 
-        <Box>
+        {/* Page information */}
+        <Box className="finora-expenses-header-content">
+
           <Typography
             variant="h4"
             className="finora-expenses-title"
@@ -867,21 +869,27 @@ export default function MonthlyExpenses() {
           <Typography
             variant="body2"
             color="text.secondary"
+            className="finora-expenses-description"
           >
-            Track your spending, payments and
-            upcoming expenses.
+            Track your spending, payments and upcoming expenses.
           </Typography>
+
         </Box>
 
+        {/* Add Expense */}
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() =>
-            setModalOpen(true)
-          }
+          onClick={() => setModalOpen(true)}
           className="finora-expenses-add-button"
         >
-          Add Expense
+          <span className="finora-add-expense-text">
+            Add Expense
+          </span>
+
+          <span className="finora-add-expense-short-text">
+            Add
+          </span>
         </Button>
 
       </Box>
