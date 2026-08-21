@@ -379,7 +379,7 @@ export default function LoanDetails() {
                 </Table>
               </TableContainer>
             </div>
-            {loanDetails?.loanType !== 'loan' && (
+            {(loanDetails?.loanType === 'debt' || loanDetails?.paymentType === "interest") && (
               <div style={{ padding: '0.5em', display: 'flex', justifyContent: 'end' }}>
                 <Button variant="contained" onClick={() => setIsAddTransactionOpen(true)} >Add Transaction</Button>
               </div>
