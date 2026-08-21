@@ -17,10 +17,13 @@ import {
   CardContent,
   Chip,
   CircularProgress,
+  FormControl,
   IconButton,
+  InputLabel,
   LinearProgress,
   Menu,
   MenuItem,
+  Select,
   Skeleton,
   Stack,
   Table,
@@ -324,7 +327,7 @@ function MobileLoanCard({ loan, index, onView }) {
           </Typography>
 
           <Typography variant="body1" fontWeight={700}>
-            {formatCurrency(loan?.emiAmount)}
+            {formatCurrency(loan?.emiAmount || loan?.interestAmount)}
           </Typography>
         </Box>
       </Box>
@@ -359,6 +362,8 @@ const LoanManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("active");
+  const [filteredLoans, setFilteredLoans] = useState([]);
 
   /* ---------------------------------------------------------------------- */
   /* Fetch loans                                                            */
@@ -372,15 +377,19 @@ const LoanManagement = () => {
       const res = await loanApi?.getAllNewLoans();
 
       if (res?.success) {
-        setLoanList(Array.isArray(res?.data) ? res.data : []);
+        const loanData = Array.isArray(res?.data) ? res.data : [];
+        setLoanList([...loanData]);
+        setFilteredLoans([...loanData.filter((item) => item?.status === filterStatus)]);
       } else {
         setLoanList([]);
+        setFilteredLoans([]);
         setError(res?.message || 'Unable to load loans.');
       }
     } catch (err) {
       console.error('Error fetching loans:', err);
 
       setLoanList([]);
+      setFilteredLoans([]);
       setError('Unable to load your loans. Please try again.');
     } finally {
       setLoading(false);
@@ -475,6 +484,17 @@ const LoanManagement = () => {
   const handleMenuClose = () => {
     setMenuAnchor(null);
   };
+
+  const handleStatusChange = (event) => {
+    setFilterStatus(event?.target?.value);
+    let filteredData;
+    if (event?.target?.value === "all") {
+      filteredData = [...loanList]
+    } else {
+      filteredData = loanList?.filter((item) => item?.status === event?.target?.value)
+    }
+    setFilteredLoans([...filteredData])
+  }
 
 
   return (
@@ -708,7 +728,23 @@ const LoanManagement = () => {
                 } tracked`}
             </Typography>
           </Box>
-
+          <Box style={{ width: "15%" }} >
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={filterStatus}
+                label="Status"
+                fullWidth
+                onChange={handleStatusChange}
+              >
+                <MenuItem value={"all"}>All</MenuItem>
+                <MenuItem value={"active"}>Active</MenuItem>
+                <MenuItem value={"closed"}>Closed</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </Box>
 
 
@@ -728,7 +764,7 @@ const LoanManagement = () => {
         {/* DESKTOP TABLE                                                 */}
         {/* ============================================================ */}
 
-        {!loading && loanList.length > 0 && (
+        {!loading && filteredLoans.length > 0 && (
           <TableContainer className="finora-loan-table-wrapper">
 
             <Table className="finora-loan-table">
@@ -744,7 +780,7 @@ const LoanManagement = () => {
                   <TableCell>Total</TableCell>
                   <TableCell>Outstanding</TableCell>
                   <TableCell>Progress</TableCell>
-                  <TableCell>Monthly EMI</TableCell>
+                  <TableCell>Monthly EMI/Interest</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell />
 
@@ -755,7 +791,7 @@ const LoanManagement = () => {
 
               <TableBody>
 
-                {loanList.map((loan, index) => {
+                {filteredLoans.map((loan, index) => {
 
                   const progress = getProgress(
                     loan?.totalAmount,
@@ -873,7 +909,7 @@ const LoanManagement = () => {
                           fontWeight={700}
                         >
                           {formatCurrency(
-                            loan?.emiAmount
+                            loan?.emiAmount || loan?.interestAmount
                           )}
                         </Typography>
 
@@ -918,10 +954,10 @@ const LoanManagement = () => {
         {/* MOBILE CARDS                                                  */}
         {/* ============================================================ */}
 
-        {!loading && loanList.length > 0 && (
+        {!loading && filteredLoans.length > 0 && (
           <Box className="finora-mobile-loans-list">
 
-            {loanList.map((loan, index) => (
+            {filteredLoans.map((loan, index) => (
               <MobileLoanCard
                 key={loan?._id || index}
                 loan={loan}
