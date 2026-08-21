@@ -42,7 +42,6 @@ import {
   Refresh,
 } from '@mui/icons-material';
 
-import DateRangeFilter from './Components/DateRangeFilter';
 import AddExpenseModal from './Modals/AddExpenseModal';
 import expensesApi from '../../api/expensesApi';
 
@@ -50,6 +49,8 @@ import './Expenses.css';
 
 import ExpenseCalendar from './Components/ExpenseCalendar';
 import ExpenseSummaryCards from './Components/ExpenseSummaryCards';
+import MonthSelector from './Components/MonthSelector';
+import { getMonthDateRange } from '../../utils/helper';
 
 /* -------------------------------------------------------------------------- */
 /* Helpers                                                                    */
@@ -178,58 +179,6 @@ const StatusChip = ({
         />
       </MenuItem>
     </Select>
-  );
-};
-
-/* -------------------------------------------------------------------------- */
-/* Summary Card                                                               */
-/* -------------------------------------------------------------------------- */
-
-const SummaryCard = ({
-  title,
-  value,
-  subtitle,
-  icon,
-  className = '',
-}) => {
-  return (
-    <Card
-      elevation={0}
-      className={`finora-expense-summary-card ${className}`}
-    >
-      <CardContent>
-        <Box className="finora-expense-summary-top">
-          <Box className="finora-expense-summary-icon">
-            {icon}
-          </Box>
-        </Box>
-
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          className="finora-expense-summary-title"
-        >
-          {title}
-        </Typography>
-
-        <Typography
-          variant="h5"
-          className="finora-expense-summary-value"
-        >
-          {value}
-        </Typography>
-
-        {subtitle && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            className="finora-expense-summary-subtitle"
-          >
-            {subtitle}
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
   );
 };
 
@@ -582,6 +531,8 @@ export default function MonthlyExpenses() {
   const [selectedExpense, setSelectedExpense] =
     useState(null);
 
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+
   /* ---------------------------------------------------------------------- */
   /* Fetch Expenses                                                         */
   /* ---------------------------------------------------------------------- */
@@ -590,8 +541,10 @@ export default function MonthlyExpenses() {
     try {
       setLoading(true);
 
+      const { startDate, endDate } = getMonthDateRange(month);
+
       const res =
-        await expensesApi?.getAllExpensesByUserId();
+        await expensesApi?.getAllExpensesByUserId(startDate, endDate);
 
       if (res?.success) {
         const expensesList = Array.isArray(res?.data)
@@ -642,7 +595,7 @@ export default function MonthlyExpenses() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [month]);
 
   /* ---------------------------------------------------------------------- */
   /* Initial API Call                                                       */
@@ -1057,10 +1010,9 @@ export default function MonthlyExpenses() {
           </Select>
 
           <Box className="finora-expense-date-filter">
-            <DateRangeFilter
-              onFilterChange={
-                handleFilterChange
-              }
+            <MonthSelector
+              selectedMonth={month}
+              setSelectedMonth={setMonth}
             />
           </Box>
 
