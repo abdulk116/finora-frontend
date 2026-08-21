@@ -73,7 +73,7 @@ export default function LoanDetails() {
   const [isAddTransactionOpen, setIsAddTransactionOpen] = useState(false);
 
   const loanPaidAmount = useMemo(() => {
-    return (loanDetails?.totalAmount || 0) - (loanDetails?.remainingAmount || 0)
+    return loanDetails?.loanType === "loan" ? loanDetails?.totalPaidAmount : (loanDetails?.totalAmount || 0) - (loanDetails?.remainingAmount || 0)
   }, [loanDetails]);
 
   const formatCurrency = (amount) => {
