@@ -1,8 +1,8 @@
 import axiosClient from "./axiosClient";
 
 const expensesApi = {
-  getAllExpensesByUserId: () => {
-    return axiosClient.get('/expenses');
+  getAllExpensesByUserId: (startDate, endDate) => {
+    return axiosClient.get(`/expenses?startDate=${startDate}&endDate=${endDate}`);
   },
 
   createExpenses: (payload) => {
