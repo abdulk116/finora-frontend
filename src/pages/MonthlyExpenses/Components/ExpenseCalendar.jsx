@@ -174,46 +174,29 @@ export default function ExpenseCalendar({
     <div className="finora-expense-calendar-wrapper">
 
       <FullCalendar
-
         plugins={[
           dayGridPlugin,
           interactionPlugin,
         ]}
-
         initialView="dayGridMonth"
-
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
           right: 'dayGridMonth',
         }}
-
         height="auto"
-
         events={events}
-
         eventClick={handleEventClick}
-
         dateClick={handleDateClick}
-
         dayMaxEvents={3}
-
         moreLinkClick="popover"
-
         eventDisplay="block"
-
         displayEventTime={false}
-
         fixedWeekCount={false}
-
         showNonCurrentDates
-
         firstDay={1}
-
         nowIndicator
-
         selectable
-
         eventContent={(eventInfo) => {
 
           const expense =
@@ -237,7 +220,6 @@ export default function ExpenseCalendar({
             </div>
           );
         }}
-
       />
 
     </div>

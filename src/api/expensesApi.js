@@ -11,6 +11,14 @@ const expensesApi = {
 
   updateExpenseStatus: (payload) => {
     return axiosClient.post('/expenses/status', payload)
+  },
+
+  deleteExpense: (payload) => {
+    return axiosClient.post('/expenses/delete', payload)
+  },
+
+  updateExpense: (payload) => {
+    return axiosClient.post('/expenses/update', payload)
   }
 }
 

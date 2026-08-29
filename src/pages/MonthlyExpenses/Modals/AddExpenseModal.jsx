@@ -54,9 +54,11 @@ export default function AddExpenseModal({
   onClose,
   onSubmit,
   loading = false,
+  selectedExpense
 }) {
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState({});
+  const isEdit = !!selectedExpense?._id;
 
   /**
    * ---------------------------------------------------------
@@ -64,11 +66,20 @@ export default function AddExpenseModal({
    * ---------------------------------------------------------
    */
   useEffect(() => {
-    if (open) {
+    if (open && !isEdit) {
       setFormData(initialForm());
       setErrors({});
+    } else if (isEdit) {
+      setFormData({
+        dueDate: selectedExpense?.dueDate?.split("T")?.[0],
+        related: selectedExpense?.related,
+        amount: selectedExpense?.amount,
+        status: selectedExpense?.status,
+        notes: selectedExpense?.notes,
+      })
+      setErrors({});
     }
-  }, [open]);
+  }, [open, selectedExpense]);
 
   /**
    * ---------------------------------------------------------
@@ -250,6 +261,9 @@ export default function AddExpenseModal({
       status: formData.status,
       notes: formData.notes.trim() || undefined,
     };
+    if(isEdit) {
+      payload.expenseId = selectedExpense?._id
+    }
 
     onSubmit(payload);
   };
@@ -292,7 +306,7 @@ export default function AddExpenseModal({
                 id="add-expense-modal-title"
                 className="finora-modal-title"
               >
-                Add New Expense
+                {isEdit ? "Edit Expense" : "Add New Expense"}
               </Typography>
 
               <Typography
@@ -494,11 +508,10 @@ export default function AddExpenseModal({
                       </Typography>
                     </Box>
                   }
-                  className={`finora-status-option ${
-                    formData.status === 'Pending'
+                  className={`finora-status-option ${formData.status === 'Pending'
                       ? 'selected pending'
                       : ''
-                  }`}
+                    }`}
                 />
 
 
@@ -518,11 +531,10 @@ export default function AddExpenseModal({
                       </Typography>
                     </Box>
                   }
-                  className={`finora-status-option ${
-                    formData.status === 'Completed'
+                  className={`finora-status-option ${formData.status === 'Completed'
                       ? 'selected completed'
                       : ''
-                  }`}
+                    }`}
                 />
 
 
@@ -542,11 +554,10 @@ export default function AddExpenseModal({
                       </Typography>
                     </Box>
                   }
-                  className={`finora-status-option ${
-                    formData.status === 'Overdue'
+                  className={`finora-status-option ${formData.status === 'Overdue'
                       ? 'selected overdue'
                       : ''
-                  }`}
+                    }`}
                 />
 
               </RadioGroup>
@@ -622,8 +633,8 @@ export default function AddExpenseModal({
               startIcon={<Save />}
             >
               {loading
-                ? 'Saving...'
-                : 'Save Expense'}
+                ? isEdit ? 'Updating' : 'Saving...'
+                : isEdit ? 'Update Expense' : 'Save Expense'}
             </Button>
 
           </Box>
