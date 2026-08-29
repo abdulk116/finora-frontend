@@ -40,6 +40,7 @@ import {
   AccountBalanceWallet,
   MoreVert,
   Refresh,
+  DeleteForeverOutlined,
 } from '@mui/icons-material';
 
 import AddExpenseModal from './Modals/AddExpenseModal';
@@ -727,9 +728,13 @@ export default function MonthlyExpenses() {
     try {
 
       setSubmitting(true);
+      let apiEndPoint = expensesApi?.createExpenses;
+      if (payload?.expenseId) {
+        apiEndPoint = expensesApi?.updateExpense;
+      }
 
       const res =
-        await expensesApi?.createExpenses(
+        await apiEndPoint(
           payload
         );
 
@@ -786,11 +791,24 @@ export default function MonthlyExpenses() {
     setSelectedExpense(expense);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = async (flag = '') => {
 
-    setMenuAnchor(null);
-
-    setSelectedExpense(null);
+    if (flag === "delete") {
+      if (selectedExpense?._id) {
+        const payload = { expenseId: selectedExpense?._id }
+        const res = await expensesApi?.deleteExpense(payload)
+        if (res?.status) {
+          await getExpensesList()
+          setMenuAnchor(null);
+          setSelectedExpense(null);
+        }
+      }
+    } else if (flag === "edit") {
+      setModalOpen(true);
+    } else {
+      setMenuAnchor(null);
+      setSelectedExpense(null);
+    }
   };
 
   /* ---------------------------------------------------------------------- */
@@ -1372,7 +1390,7 @@ export default function MonthlyExpenses() {
         </MenuItem>
 
         <MenuItem
-          onClick={handleMenuClose}
+          onClick={() => handleMenuClose("edit")}
         >
           <ListItemIcon>
             <AccountBalanceWallet fontSize="small" />
@@ -1380,6 +1398,17 @@ export default function MonthlyExpenses() {
 
           <ListItemText>
             Edit Expense
+          </ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleMenuClose("delete")}
+        >
+          <ListItemIcon>
+            <DeleteForeverOutlined fontSize="small" />
+          </ListItemIcon>
+
+          <ListItemText>
+            Delete Expense
           </ListItemText>
         </MenuItem>
 
@@ -1391,11 +1420,16 @@ export default function MonthlyExpenses() {
 
       <AddExpenseModal
         open={modalOpen}
-        onClose={() =>
+        onClose={() => {
+          if (selectedExpense?._id) {
+            setMenuAnchor(null);
+            setSelectedExpense(null);
+          }
           setModalOpen(false)
-        }
+        }}
         onSubmit={handleCreateExpense}
         loading={submitting}
+        selectedExpense={selectedExpense}
       />
 
     </Container>
